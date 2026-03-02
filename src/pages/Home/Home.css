@@ -1,0 +1,119 @@
+:root {
+  /* already defined colors can be used here */
+}
+
+/* hero */
+.hero {
+  background-color: var(--cv-black);
+  color: var(--cv-text-primary);
+}
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--cv-text-primary);
+}
+.hero p {
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+  color: var(--cv-text-secondary);
+}
+.hero .btn-warning {
+  background-color: var(--cv-gold);
+  border: none;
+  color: var(--cv-black);
+  font-weight: 600;
+}
+.hero .btn-warning:hover {
+  background-color: #c29b28;
+}
+.hero .btn-outline-secondary {
+  border-color: var(--cv-border);
+  color: var(--cv-text-primary);
+}
+.hero .btn-outline-secondary:hover {
+  border-color: var(--cv-gold);
+  color: var(--cv-gold);
+}
+
+.hero .hero-img-small {
+  max-width: 90%;
+  height: auto;
+}
+
+/* features cards */
+.features {
+  background-color: var(--cv-black);
+}
+.features h2 {
+  color: var(--cv-text-primary);
+}
+.features .card {
+  border: 1px solid var(--cv-border);
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--cv-card-bg);
+  color: var(--cv-text-primary);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  transition: all 0.3s;
+}
+.features .card:hover {
+  border-color: var(--cv-gold);
+  box-shadow: 0 12px 32px rgba(212,175,53,0.2);
+}
+.features .card .icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--cv-gold);
+}
+.features .card-title {
+  color: var(--cv-text-primary);
+  font-weight: 600;
+}
+.features .card-text {
+  color: var(--cv-text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* models section */
+.models {
+  background-color: var(--cv-black);
+}
+.models h2 {
+  color: var(--cv-text-primary);
+}
+.models .card {
+  border: 1px solid var(--cv-border);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  background: var(--cv-card-bg);
+  color: var(--cv-text-primary);
+}
+.models .card:hover {
+  transform: translateY(-6px);
+  border-color: var(--cv-gold);
+  box-shadow: 0 16px 40px rgba(212,175,53,0.25);
+}
+.models .card-title {
+  color: var(--cv-text-primary);
+  font-weight: 600;
+  margin-top: 1rem;
+}
+.models .card img {
+  max-width: 100%;
+  height: auto;
+  background: rgba(255,255,255,0.03);
+}
+
+/* spacing tweaks */
+.models .btn {
+  margin-top: 1rem;
+  background-color: transparent;
+  border: 1px solid var(--cv-gold);
+  color: var(--cv-gold);
+  font-weight: 600;
+}
+.models .btn:hover {
+  background-color: var(--cv-gold);
+  color: var(--cv-black);
+}
