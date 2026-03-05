@@ -1,9 +1,17 @@
 ﻿import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import HeroImage from "../../app/assets/images/hero.svg";
 import Algodon from "../../app/assets/images/algodon.png";
-import CloudMaker from "../../app/assets/images/models/cloudmaker.svg";
-import CubeMini from "../../app/assets/images/models/cubemini.svg";
-import ArtisanAll from "../../app/assets/images/models/artisan.svg";
+import AlgodonVideo from "../../app/assets/images/algodon.mp4";
+import AlgodonPororoVideo from "../../app/assets/images/algodon-pororo.mp4";
+import Logo from "../../app/assets/images/logo/logo.png";
+import LogoAlt from "../../app/assets/images/logo/logo2.png";
+import AlgodonM4 from "../../app/assets/images/models/algodonM4_s.png";
+import AlgodonM5 from "../../app/assets/images/models/algodonM5.png";
+import PororoM from "../../app/assets/images/models/pororoM.png";
+import AlgodonM from "../../app/assets/images/models/algodonM.png";
+import AlgodonM2 from "../../app/assets/images/models/algodonM2.png";
+import AlgodonM3 from "../../app/assets/images/models/algodonM3.png";
 import "./Home.css";
 
 export default function Home() {
@@ -31,35 +39,232 @@ export default function Home() {
  ];
 
  const models = [
- { image: CloudMaker, name: "CloudMaker Pro" },
- { image: CubeMini, name: "SugarCube Mini" },
- { image: ArtisanAll, name: "Artisan All" },
+ {
+   image: AlgodonM,
+   name: "CloudMaker Pro",
+   badge: "Más vendido",
+   description: "Máquina automática de alta capacidad, ideal para eventos masivos y ferias con gran flujo de público.",
+   tags: ["Automática", "Alta capacidad", "WiFi"],
+ },
+ {
+   image: AlgodonM2,
+   name: "SugarCube Mini",
+   badge: "Compacta",
+   description: "Diseño compacto y portátil, perfecta para espacios reducidos sin sacrificar rendimiento.",
+   tags: ["Portátil", "Silenciosa", "Fácil uso"],
+ },
+ {
+   image: AlgodonM3,
+   name: "Artisan All",
+   badge: "Premium",
+   description: "Modelo premium con múltiples funciones artesanales y pantalla táctil para una experiencia única.",
+   tags: ["Táctil", "Multi-función", "Pro"],
+ },
+ {
+   image: AlgodonM4,
+   name: "CloudMaker Lite",
+   badge: "Nuevo",
+   description: "Versión ligera del CloudMaker, ideal para emprendedores que inician su camino.",
+   tags: ["Liviana", "Económica", "Plug & Play"],
+ },
+ {
+   image: AlgodonM5,
+   name: "CubeMini Pro",
+   badge: "Best value",
+   description: "La evolución del SugarCube con mayor autonomía y sistema de limpieza automática.",
+   tags: ["Auto-limpieza", "Autonomía", "Eficiente"],
+ },
+ {
+   image: PororoM,
+   name: "Artisan Event",
+   badge: "Edición especial",
+   description: "Diseñada para grandes eventos, con mayor producción por hora y modo espectáculo LED.",
+   tags: ["Alta producción", "LED", "Eventos"],
+ },
+ ];
+
+ const [modelsRef, modelsVisible] = useScrollReveal();
+ const [benefitsRef, benefitsVisible] = useScrollReveal();
+ const [vendingRef, vendingVisible] = useScrollReveal();
+ const [aboutRef, aboutVisible] = useScrollReveal();
+ const [featuresRef, featuresVisible] = useScrollReveal();
+
+ const heroFrames = [
+ { key: "main", type: "video", src: AlgodonVideo, poster: Algodon, alt: "Máquina en acción", frameClass: "hero-frame-main" },
+ { key: "top", type: "image", src: LogoAlt, alt: "Marca Coolvending", frameClass: "hero-frame-top" },
+ { key: "bottom", type: "video", src: AlgodonPororoVideo, poster: Logo, alt: "Experiencia del producto", frameClass: "hero-frame-bottom" },
  ];
 
  return (
  <>
- <section className="hero py-5">
+ <section className="hero hero-bg-magenta py-5">
  <Container>
  <Row className="align-items-center">
- <Col md={6}>
- <h1>Reinventamos la magia del algodón de azúcar</h1>
- <p>
+ <Col md={5}>
+ <h1 className="hero-title-animated">Reinventamos la magia del algodón de azúcar</h1>
+ <p className="hero-text-animated">
  Máquinas de última tecnología para emprendedores y eventos.
  Tecnología punta para un negocio dulce y rentable.
  </p>
- <div className="d-flex gap-2">
- <Button variant="warning">Solicitar presupuesto</Button>
+ <div className="d-flex gap-2 hero-buttons-animated">
+ <Button variant="light" className="hero-btn-primary">Solicitar presupuesto</Button>
  <Button variant="outline-secondary">Ver demostración</Button>
  </div>
  </Col>
- <Col md={6} className="text-center">
- <img src={Algodon} alt="Máquina de algodón" className="img-fluid hero-img-small" />
+ <Col md={7} className="text-center hero-media-col">
+ <div className="hero-collage hero-media-animated" aria-label="Galería de medios enmarcados">
+ {heroFrames.map((frame) => (
+ <figure key={frame.key} className={`hero-frame ${frame.frameClass}`}>
+ {frame.type === "video" && frame.src ? (
+ <video autoPlay muted loop playsInline controls={false} preload="metadata" poster={frame.poster || ""}>
+ <source src={frame.src} type="video/mp4" />
+ </video>
+ ) : (
+ <img src={frame.src} alt={frame.alt} className="img-fluid" />
+ )}
+ </figure>
+ ))}
+ </div>
  </Col>
  </Row>
  </Container>
  </section>
 
- <section className="features py-5 bg-light">
+ <section ref={modelsRef} className={`models py-5 reveal-section${modelsVisible ? " visible" : ""}`}>
+ <Container>
+ <div className="models-header text-center mb-5">
+ <span className="models-label">CATÁLOGO</span>
+ <h2 className="models-title">Nuestros Modelos</h2>
+ <p className="models-subtitle">Elegí la máquina que mejor se adapta a tu negocio</p>
+ </div>
+ <Row className="g-4 justify-content-center">
+ {models.map((m, idx) => (
+ <Col xs={11} sm={8} md={5} lg={4} key={idx}>
+ <div className="product-card reveal-card" style={{ transitionDelay: `${idx * 0.12}s` }}>
+ <div className="product-card-img-wrap">
+ <img src={m.image} alt={m.name} className="product-card-img" />
+ <span className="product-card-badge">{m.badge}</span>
+ </div>
+ <div className="product-card-body">
+ <h3 className="product-card-title">{m.name}</h3>
+ <div className="product-card-tags">
+ {m.tags.map((tag) => (
+ <span key={tag} className="product-card-tag">{tag}</span>
+ ))}
+ </div>
+ <button className="product-card-btn">Ver detalles →</button>
+ </div>
+ </div>
+ </Col>
+ ))}
+ </Row>
+ </Container>
+ </section>
+
+ <section ref={benefitsRef} className={`why-benefits py-5 reveal-section${benefitsVisible ? " visible" : ""}`}>
+ <Container>
+ <div className="models-header text-center mb-5">
+ <span className="models-label">BENEFICIOS</span>
+ <h2 className="models-title">¿Por qué sumar una vending machine?</h2>
+ <p className="models-subtitle">Un negocio que trabaja para vos, incluso cuando no estás</p>
+ </div>
+ <Row className="g-4">
+ {[
+ { icon: "💰", title: "Ingresos pasivos reales", text: "La máquina genera ventas las 24hs, los 7 días de la semana, sin necesidad de personal dedicado." },
+ { icon: "📍", title: "Ubicación estratégica", text: "Shoppings, ferias, parques, eventos — cualquier lugar con tráfico es una oportunidad de venta." },
+ { icon: "⚡", title: "Bajo costo operativo", text: "Sin local, sin empleados fijos. Solo insumos y mantenimiento mínimo para maximizar tu margen." },
+ { icon: "📈", title: "ROI en meses, no años", text: "Nuestros clientes recuperan la inversión en un promedio de 4 a 6 meses según el punto de venta." },
+ { icon: "🎯", title: "Producto con alta demanda", text: "El algodón de azúcar atrae a todas las edades. Es una experiencia, no solo un producto." },
+ { icon: "🔧", title: "Soporte incluido", text: "Acompañamos cada paso: instalación, capacitación y soporte técnico remoto cuando lo necesitás." },
+ ].map((item, i) => (
+ <Col key={i} xs={12} sm={6} lg={4}>
+ <div className="why-card reveal-card" style={{ transitionDelay: `${i * 0.1}s` }}>
+ <div className="why-card-icon">{item.icon}</div>
+ <h4 className="why-card-title">{item.title}</h4>
+ <p className="why-card-text">{item.text}</p>
+ </div>
+ </Col>
+ ))}
+ </Row>
+ </Container>
+ </section>
+
+ <section ref={vendingRef} className={`why-vending py-5 reveal-section${vendingVisible ? " visible" : ""}`}>
+ <Container>
+ <div className="models-header text-center mb-5">
+ <span className="models-label">BENEFICIOS</span>
+ <h2 className="models-title">Potenciá tu negocio con una vending machine</h2>
+ <p className="models-subtitle">Un negocio que trabaja para vos, incluso cuando no estás</p>
+ </div>
+ <Row className="align-items-center g-5">
+ <Col md={6} className="reveal-col--left">
+ <div className="why-vending-img-wrap">
+ <img src={AlgodonM} alt="Máquina Coolvending" className="why-vending-img" />
+ </div>
+ </Col>
+ <Col md={6} className="reveal-col--right">
+ <p className="why-vending-intro">
+ Desde emprendedores hasta dueños de locales, Coolvending ofrece una forma simple y rentable de sumar ingresos con máquinas expendedoras automáticas que atraen clientes y generan experiencias únicas.
+ </p>
+ <p className="why-vending-intro">Nuestras máquinas están diseñadas para el éxito:</p>
+ <ul className="why-vending-list">
+ {[
+ "Baja inversión con alto retorno",
+ "Mínimo costo de mantenimiento y operación",
+ "Márgenes de ganancia comprobados con recupero rápido",
+ "Operación 100% automática, sin personal dedicado",
+ "Ubicable en shoppings, ferias, parques y eventos",
+ "Soporte técnico remoto incluido en todo momento",
+ ].map((item, i) => (
+ <li key={i} className="why-vending-item">
+ <span className="why-check">✔</span>
+ {item}
+ </li>
+ ))}
+ </ul>
+ <p className="why-vending-closing">
+ Un negocio que trabaja para vos las 24hs, los 7 días de la semana, fácil de operar y imposible de ignorar.
+ </p>
+ <button className="why-vending-cta">Hablemos de negocios →</button>
+ </Col>
+ </Row>
+ </Container>
+ </section>
+
+ <section ref={aboutRef} className={`about py-5 reveal-section${aboutVisible ? " visible" : ""}`}>
+ <Container>
+ <Row className="align-items-center">
+ <Col md={6} className="reveal-col--left">
+ <div className="about-label">NUESTRA VISIÓN</div>
+ <h2 className="about-title">Innovación en cada algodón</h2>
+ <p className="about-text">
+ En Coolvending creemos en la magia del entretenimiento sano y rentable. Nos esforzamos por
+ llevar tecnología de punta a cada emprendedor, feria y evento, facilitando operaciones automáticas
+ y diseños profesionales que marquan la diferencia.
+ </p>
+ <div className="about-metrics">
+ <div className="metric-item">
+ <div className="metric-value">100%</div>
+ <div className="metric-label">AUTOMÁTICO</div>
+ </div>
+ <div className="metric-item">
+ <div className="metric-value">6 Mes.</div>
+ <div className="metric-label">ROI PROMEDIO</div>
+ </div>
+ <div className="metric-item">
+ <div className="metric-value">500+</div>
+ <div className="metric-label">UNIDADES/DÍA</div>
+ </div>
+ </div>
+ </Col>
+ <Col md={6} className="text-center reveal-col--right">
+ <img src={HeroImage} alt="Visión Coolvending" className="img-fluid about-img" />
+ </Col>
+ </Row>
+ </Container>
+ </section>
+
+ <section ref={featuresRef} className={`features py-5 bg-light reveal-section${featuresVisible ? " visible" : ""}`}>
  <Container>
  <h2 className="text-center mb-4">Por qué elegir Coolvending</h2>
  <Row xs={1} md={2} lg={4} className="g-4">
@@ -78,26 +283,6 @@ export default function Home() {
  </Container>
  </section>
 
- <section className="models py-5">
- <Container>
- <h2 className="text-center mb-4">Nuestros Modelos</h2>
- <Row xs={1} md={3} className="g-4">
- {models.map((m, idx) => (
- <Col key={idx}>
- <Card className="h-100">
- <Card.Img variant="top" src={m.image} alt={m.name} />
- <Card.Body className="d-flex flex-column">
- <Card.Title>{m.name}</Card.Title>
- <Button variant="outline-primary" className="mt-auto">
- Ver detalles
- </Button>
- </Card.Body>
- </Card>
- </Col>
- ))}
- </Row>
- </Container>
- </section>
  </>
  );
 }

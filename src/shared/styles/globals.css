@@ -2,15 +2,15 @@
   /* Nueva Paleta - Grafito & Oro (Más Oscura) */
   --cv-black: #1a1a1a; /* Fondo Principal - Grafito Oscuro */
   --cv-card-bg: #252525; /* Fondos de Sección/Tarjetas - Gris Oscuro */
-  --cv-gold: #d4af35; /* Primario - Oro Mate */
+  --cv-gold: #d63384; /* Primario - Magenta */
   --cv-amber: #f5a524; /* Acento - Ámbar Vibrante */
   --cv-text-primary: #f0f0f0; /* Texto Principal - Blanco Suave */
   --cv-text-secondary: #b3b3b3; /* Texto Secundario (derivado) */
   --cv-border: #3a3a3a; /* Bordes Sutiles */
   /* Aliases para compatibilidad */
   --cv-brown-dark: #252525;
-  --cv-brown: #d4af35;
-  --cv-caramel: #d4af35;
+  --cv-brown: #d63384;
+  --cv-caramel: #d63384;
   --cv-light: #b3b3b3;
   --cv-cream: #f0f0f0;
 }
@@ -54,7 +54,7 @@
   font-weight: 700;
   padding: 10px 14px;
   border-radius: 12px;
-  color: var(--cv-black) !important;
+  color: #ffffff !important;
 }
 
 .cv-cta:hover{
@@ -72,8 +72,8 @@
 
 .cv-login-btn:hover {
   background-color: var(--cv-gold) !important;
-  color: var(--cv-black) !important;
-  box-shadow: 0 4px 12px rgba(212, 175, 53, 0.3);
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
   transform: translateY(-2px);
 }
 
@@ -118,4 +118,71 @@
     margin-top: -12px;
     margin-bottom: -12px;
   }
+}
+
+/* Section spacing */
+.models,
+.why-benefits,
+.why-vending,
+.about,
+.features {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+/* Scroll reveal — slide from sides */
+.reveal-col--left,
+.reveal-col--right {
+  opacity: 0;
+  transition: opacity 1.05s ease, transform 1.05s ease;
+}
+
+.reveal-col--left  { transform: translateX(-60px); }
+.reveal-col--right { transform: translateX(60px); }
+
+.reveal-section.visible .reveal-col--left,
+.reveal-section.visible .reveal-col--right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-section.visible .reveal-col--right {
+  transition-delay: 0.15s;
+}
+
+/* Section header animations */
+.reveal-section .models-header .models-label,
+.reveal-section .models-header .models-title,
+.reveal-section .models-header .models-subtitle {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.825s ease, transform 0.825s ease;
+}
+
+.reveal-section.visible .models-header .models-label {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s;
+}
+.reveal-section.visible .models-header .models-title {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.15s;
+}
+.reveal-section.visible .models-header .models-subtitle {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.28s;
+}
+
+/* Stagger for card grids */
+.reveal-section .reveal-card {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.825s ease, transform 0.825s ease;
+}
+
+.reveal-section.visible .reveal-card {
+  opacity: 1;
+  transform: none;
 }

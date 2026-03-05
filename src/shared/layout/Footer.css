@@ -1,7 +1,7 @@
 .footer {
   background-color: var(--cv-black);
   background-image: 
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="104"><defs><pattern id="hexgrid" x="0" y="0" width="120" height="104" patternUnits="userSpaceOnUse"><path d="M60,0 L90,30 L90,90 L60,120 L30,90 L30,30 Z" fill="none" stroke="%23d4af35" stroke-width="1" opacity="0.1"/><path d="M0,60 L30,30 L30,90 L0,120" fill="none" stroke="%23d4af35" stroke-width="1" opacity="0.1"/><path d="M120,60 L90,30 L90,90 L120,120" fill="none" stroke="%23d4af35" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="120" height="104" fill="none"/><use href="%23hexgrid"/></svg>');
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="104"><defs><pattern id="hexgrid" x="0" y="0" width="120" height="104" patternUnits="userSpaceOnUse"><path d="M60,0 L90,30 L90,90 L60,120 L30,90 L30,30 Z" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/><path d="M0,60 L30,30 L30,90 L0,120" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/><path d="M120,60 L90,30 L90,90 L120,120" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="120" height="104" fill="none"/><use href="%23hexgrid"/></svg>');
   background-size: 120px 104px;
   color: var(--cv-text-primary);
   padding: 3rem 0 1rem;
@@ -81,7 +81,7 @@
 .social-links a:hover {
   border-color: var(--cv-gold);
   color: var(--cv-gold);
-  background-color: rgba(212, 175, 53, 0.1);
+  background-color: rgba(214, 51, 132, 0.1);
 }
 
 /* Newsletter Form */
@@ -102,7 +102,7 @@
   background-color: var(--cv-card-bg);
   border-color: var(--cv-gold);
   color: var(--cv-text-primary);
-  box-shadow: 0 0 0 0.2rem rgba(212, 175, 53, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, 0.15);
 }
 
 .footer-input::placeholder {
@@ -112,7 +112,7 @@
 .footer-btn {
   background-color: var(--cv-gold);
   border: none;
-  color: var(--cv-black);
+  color: #ffffff;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
@@ -121,10 +121,10 @@
 }
 
 .footer-btn:hover {
-  background-color: #c29b28;
-  color: var(--cv-black);
+  background-color: #b02a6f;
+  color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(212, 175, 53, 0.3);
+  box-shadow: 0 6px 16px rgba(214, 51, 132, 0.3);
 }
 
 /* Bottom Footer */
