@@ -1,8 +1,5 @@
 .footer {
-  background-color: var(--cv-black);
-  background-image: 
-    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="104"><defs><pattern id="hexgrid" x="0" y="0" width="120" height="104" patternUnits="userSpaceOnUse"><path d="M60,0 L90,30 L90,90 L60,120 L30,90 L30,30 Z" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/><path d="M0,60 L30,30 L30,90 L0,120" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/><path d="M120,60 L90,30 L90,90 L120,120" fill="none" stroke="%23d63384" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="120" height="104" fill="none"/><use href="%23hexgrid"/></svg>');
-  background-size: 120px 104px;
+  background-color: var(--cv-card-bg);
   color: var(--cv-text-primary);
   padding: 3rem 0 1rem;
   margin-top: 4rem;
@@ -90,7 +87,7 @@
 }
 
 .footer-input {
-  background-color: var(--cv-card-bg);
+  background-color: var(--cv-black);
   border: 1px solid var(--cv-border);
   color: var(--cv-text-primary);
   font-size: 0.9rem;
@@ -99,14 +96,14 @@
 }
 
 .footer-input:focus {
-  background-color: var(--cv-card-bg);
+  background-color: var(--cv-black);
   border-color: var(--cv-gold);
   color: var(--cv-text-primary);
   box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, 0.15);
 }
 
 .footer-input::placeholder {
-  color: var(--cv-text-secondary);
+  color: #adb5bd;
 }
 
 .footer-btn {

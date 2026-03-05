@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "../shared/utils/ThemeContext";
 
 import Navbar from "../shared/layout/Navbar";
 import Footer from "../shared/layout/Footer";
@@ -18,6 +19,7 @@ import ScrollToTop from "../shared/utils/ScrollToTop";
 
 function App() {
   return (
+    <ThemeProvider>
     <BrowserRouter>
 
       <ScrollToTop />
@@ -37,6 +39,7 @@ function App() {
       <Footer />
 
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

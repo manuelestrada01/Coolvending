@@ -43,43 +43,49 @@ export default function Home() {
    image: AlgodonM,
    name: "CloudMaker Pro",
    badge: "Más vendido",
-   description: "Máquina automática de alta capacidad, ideal para eventos masivos y ferias con gran flujo de público.",
    tags: ["Automática", "Alta capacidad", "WiFi"],
+   gradient: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
+   orb: "rgba(124, 58, 237, 0.35)",
  },
  {
    image: AlgodonM2,
    name: "SugarCube Mini",
    badge: "Compacta",
-   description: "Diseño compacto y portátil, perfecta para espacios reducidos sin sacrificar rendimiento.",
    tags: ["Portátil", "Silenciosa", "Fácil uso"],
+   gradient: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)",
+   orb: "rgba(236, 72, 153, 0.3)",
  },
  {
    image: AlgodonM3,
    name: "Artisan All",
    badge: "Premium",
-   description: "Modelo premium con múltiples funciones artesanales y pantalla táctil para una experiencia única.",
    tags: ["Táctil", "Multi-función", "Pro"],
+   gradient: "linear-gradient(135deg, #f9d976 0%, #f39f86 100%)",
+   orb: "rgba(251, 146, 60, 0.35)",
  },
  {
    image: AlgodonM4,
    name: "CloudMaker Lite",
    badge: "Nuevo",
-   description: "Versión ligera del CloudMaker, ideal para emprendedores que inician su camino.",
    tags: ["Liviana", "Económica", "Plug & Play"],
+   gradient: "linear-gradient(135deg, #96fbc4 0%, #f9f586 100%)",
+   orb: "rgba(16, 185, 129, 0.32)",
  },
  {
    image: AlgodonM5,
    name: "CubeMini Pro",
    badge: "Best value",
-   description: "La evolución del SugarCube con mayor autonomía y sistema de limpieza automática.",
    tags: ["Auto-limpieza", "Autonomía", "Eficiente"],
+   gradient: "linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)",
+   orb: "rgba(245, 158, 11, 0.3)",
  },
  {
    image: PororoM,
    name: "Artisan Event",
    badge: "Edición especial",
-   description: "Diseñada para grandes eventos, con mayor producción por hora y modo espectáculo LED.",
    tags: ["Alta producción", "LED", "Eventos"],
+   gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%)",
+   orb: "rgba(239, 68, 68, 0.3)",
  },
  ];
 
@@ -98,6 +104,13 @@ export default function Home() {
  return (
  <>
  <section className="hero hero-bg-magenta py-5">
+ <div className="hero-circles" aria-hidden="true">
+   <span className="hero-circle hero-circle--1" />
+   <span className="hero-circle hero-circle--2" />
+   <span className="hero-circle hero-circle--3" />
+   <span className="hero-circle hero-circle--4" />
+   <span className="hero-circle hero-circle--5" />
+ </div>
  <Container>
  <Row className="align-items-center">
  <Col md={5}>
@@ -141,7 +154,8 @@ export default function Home() {
  {models.map((m, idx) => (
  <Col xs={11} sm={8} md={5} lg={4} key={idx}>
  <div className="product-card reveal-card" style={{ transitionDelay: `${idx * 0.12}s` }}>
- <div className="product-card-img-wrap">
+ <div className="product-card-img-wrap" style={{ background: m.gradient }}>
+ <div className="product-card-orb" style={{ background: m.orb }} />
  <img src={m.image} alt={m.name} className="product-card-img" />
  <span className="product-card-badge">{m.badge}</span>
  </div>
