@@ -16,6 +16,7 @@
 }
 
 html, body {
+  overflow-x: hidden;
   background-color: #fdf8f4;
   color: #1a1a1a;
   transition: background-color 0.3s ease, color 0.3s ease;

@@ -370,7 +370,7 @@
 
 /* about section */
 .about {
-  background-color: var(--cv-card-bg);
+  background: transparent;
   color: var(--cv-text-primary);
 }
 .about-label {
@@ -480,9 +480,187 @@
   margin-top: 0.5rem;
 }
 
+/* ===================== PAGE CANVAS DECORATIONS ===================== */
+/* Single layer spanning all sections — no clipping */
+.home-canvas {
+  position: relative;
+  background: var(--cv-black);
+}
+
+.home-deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sections sit above the deco layer */
+.models,
+.why-benefits,
+.why-vending,
+.contact-cta,
+.about {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Push content above deco layer within each section */
+.models > .container,
+.why-benefits > .container,
+.why-vending > .container,
+.contact-cta > .container,
+.about > .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Base blob style */
+.sdeco {
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* ---- MODELS area (top ~0–20%) ---- */
+.sdeco-models--1 {
+  width: 520px;
+  height: 520px;
+  top: 1%;
+  right: -120px;
+  background: rgba(124, 58, 237, 0.07);
+  border-radius: 60% 40% 70% 30% / 50% 60% 40% 55%;
+}
+
+.sdeco-models--2 {
+  width: 280px;
+  height: 280px;
+  top: 16%;
+  left: -60px;
+  background: rgba(214, 51, 132, 0.07);
+  border-radius: 50%;
+}
+
+.sdeco-models--3 {
+  width: 160px;
+  height: 160px;
+  top: 4%;
+  left: 9%;
+  background: rgba(99, 179, 237, 0.08);
+  border-radius: 38% 62% 55% 45% / 60% 44% 56% 40%;
+}
+
+/* ---- BENEFITS area (top ~20–40%) ---- */
+.sdeco-benefits--1 {
+  width: 600px;
+  height: 420px;
+  top: 28%;
+  left: -200px;
+  background: rgba(251, 146, 60, 0.07);
+  border-radius: 55% 45% 40% 60% / 50% 65% 35% 50%;
+}
+
+.sdeco-benefits--2 {
+  width: 260px;
+  height: 260px;
+  top: 21%;
+  right: 5%;
+  background: rgba(214, 51, 132, 0.07);
+  border-radius: 40% 60% 50% 50% / 55% 45% 55% 45%;
+}
+
+.sdeco-benefits--3 {
+  width: 130px;
+  height: 130px;
+  top: 37%;
+  right: 18%;
+  background: rgba(16, 185, 129, 0.08);
+  border-radius: 50%;
+}
+
+/* ---- VENDING area (top ~40–60%) ---- */
+.sdeco-vending--1 {
+  width: 560px;
+  height: 560px;
+  top: 55%;
+  right: -150px;
+  background: rgba(16, 185, 129, 0.07);
+  border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
+}
+
+.sdeco-vending--2 {
+  width: 220px;
+  height: 220px;
+  top: 41%;
+  left: -50px;
+  background: rgba(124, 58, 237, 0.07);
+  border-radius: 50%;
+}
+
+/* ---- CONTACT CTA area (top ~60–80%) ---- */
+.sdeco-cta--1 {
+  width: 500px;
+  height: 500px;
+  top: 76%;
+  left: -120px;
+  background: rgba(214, 51, 132, 0.08);
+  border-radius: 55% 45% 38% 62% / 50% 60% 40% 50%;
+}
+
+.sdeco-cta--2 {
+  width: 300px;
+  height: 300px;
+  top: 61%;
+  right: -60px;
+  background: rgba(99, 179, 237, 0.07);
+  border-radius: 50%;
+}
+
+.sdeco-cta--3 {
+  width: 140px;
+  height: 140px;
+  top: 68%;
+  right: 30%;
+  background: rgba(251, 146, 60, 0.06);
+  border-radius: 50%;
+}
+
+/* ---- ABOUT area (top ~80–100%) ---- */
+.sdeco-about--1 {
+  width: 680px;
+  height: 680px;
+  top: 87%;
+  right: -280px;
+  background: rgba(124, 58, 237, 0.06);
+  border-radius: 60% 40% 50% 50% / 45% 55% 45% 55%;
+}
+
+.sdeco-about--2 {
+  width: 240px;
+  height: 240px;
+  top: 81%;
+  left: -40px;
+  background: rgba(214, 51, 132, 0.07);
+  border-radius: 50%;
+}
+
+/* Dark mode: slightly more visible */
+[data-theme="dark"] .sdeco-models--1 { background: rgba(124, 58, 237, 0.12); }
+[data-theme="dark"] .sdeco-models--2 { background: rgba(214, 51, 132, 0.11); }
+[data-theme="dark"] .sdeco-models--3 { background: rgba(99, 179, 237, 0.10); }
+[data-theme="dark"] .sdeco-benefits--1 { background: rgba(251, 146, 60, 0.11); }
+[data-theme="dark"] .sdeco-benefits--2 { background: rgba(214, 51, 132, 0.11); }
+[data-theme="dark"] .sdeco-benefits--3 { background: rgba(16, 185, 129, 0.11); }
+[data-theme="dark"] .sdeco-vending--1 { background: rgba(16, 185, 129, 0.10); }
+[data-theme="dark"] .sdeco-vending--2 { background: rgba(124, 58, 237, 0.12); }
+[data-theme="dark"] .sdeco-cta--1 { background: rgba(214, 51, 132, 0.13); }
+[data-theme="dark"] .sdeco-cta--2 { background: rgba(99, 179, 237, 0.10); }
+[data-theme="dark"] .sdeco-cta--3 { background: rgba(251, 146, 60, 0.09); }
+[data-theme="dark"] .sdeco-about--1 { background: rgba(124, 58, 237, 0.10); }
+[data-theme="dark"] .sdeco-about--2 { background: rgba(214, 51, 132, 0.11); }
+
 /* models section */
 .models {
-  background-color: var(--cv-black);
+  background: transparent;
 }
 
 .models-header .models-label {
@@ -661,7 +839,7 @@
 
 /* ==================== WHY BENEFITS CARDS ==================== */
 .why-benefits {
-  background: var(--cv-black);
+  background: transparent;
 }
 
 .why-card {
@@ -701,7 +879,7 @@
 
 /* ==================== WHY VENDING SECTION ==================== */
 .why-vending {
-  background: var(--cv-black);
+  background: transparent;
 }
 
 .why-vending-title {
@@ -731,6 +909,82 @@
   max-width: 100%;
   max-height: 340px;
   object-fit: contain;
+}
+
+/* Carousel replacing the static image */
+.why-vending-carousel-wrap {
+  border-radius: 1.25rem;
+  overflow: hidden;
+  border: 1px solid var(--cv-border);
+  margin-top: -2.5rem;
+}
+
+.why-vending-carousel .carousel-inner {
+  border-radius: 1.25rem;
+}
+
+.why-vending-carousel-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  min-height: 340px;
+}
+
+.why-vending-carousel-img {
+  max-height: 280px;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.18));
+}
+
+.why-vending-carousel-caption {
+  bottom: 0.75rem;
+  left: 0;
+  right: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.why-vending-carousel-caption span {
+  display: inline-block;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(6px);
+  color: #1a1a1a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.85rem;
+  border-radius: 2rem;
+}
+
+.why-vending-carousel .carousel-control-prev,
+.why-vending-carousel .carousel-control-next {
+  width: 10%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.why-vending-carousel-wrap:hover .carousel-control-prev,
+.why-vending-carousel-wrap:hover .carousel-control-next {
+  opacity: 0.7;
+}
+
+.why-vending-carousel .carousel-control-prev-icon,
+.why-vending-carousel .carousel-control-next-icon {
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+}
+
+.why-vending-carousel .carousel-indicators [data-bs-target] {
+  background-color: rgba(255,255,255,0.6);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+}
+
+.why-vending-carousel .carousel-indicators .active {
+  background-color: #ffffff;
 }
 
 .why-vending-intro {
@@ -788,5 +1042,126 @@
 .why-vending-cta:hover {
   background: #b02a6f;
   box-shadow: 0 6px 20px rgba(214, 51, 132, 0.35);
+  transform: translateY(-2px);
+}
+/* ==================== CONTACT CTA SECTION ==================== */
+.contact-cta {
+  background: transparent;
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
+}
+
+.contact-cta-header {
+  margin-bottom: 3rem;
+}
+
+.contact-cta-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: var(--cv-text-primary);
+}
+
+.contact-cta-highlight {
+  color: var(--cv-gold);
+}
+
+.contact-cta-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  color: var(--cv-gold);
+  font-size: 0.75rem;
+}
+
+.contact-cta-divider::before,
+.contact-cta-divider::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 1.5px;
+  background: var(--cv-gold);
+  opacity: 0.5;
+}
+
+.contact-cta-card {
+  background: #ffffff;
+  border: 1px solid var(--cv-border);
+  border-radius: 1.25rem;
+  padding: 2.5rem 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-cta-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.13);
+}
+
+.contact-cta-card--center {
+  border-color: rgba(214, 51, 132, 0.35);
+  box-shadow: 0 4px 24px rgba(214, 51, 132, 0.12);
+}
+
+[data-theme="dark"] .contact-cta-card {
+  background: var(--cv-card-bg);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .contact-cta-card:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.contact-cta-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cv-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cv-gold);
+  background: var(--cv-card-bg);
+  flex-shrink: 0;
+}
+
+.contact-cta-card--center .contact-cta-icon {
+  background: rgba(214, 51, 132, 0.08);
+  border-color: rgba(214, 51, 132, 0.3);
+}
+
+.contact-cta-text {
+  font-size: 0.97rem;
+  color: var(--cv-text-secondary);
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+.contact-cta-btn {
+  display: inline-block;
+  background: var(--cv-gold);
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.55rem 1.75rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.contact-cta-btn:hover {
+  background: #b02a6f;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(214, 51, 132, 0.35);
   transform: translateY(-2px);
 }
