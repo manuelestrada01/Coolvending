@@ -1,6 +1,9 @@
+import { useRef, useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown, Button } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "../utils/ThemeContext";
+import { useAuth } from "../utils/AuthContext";
+import { logout } from "../../services/firebase/auth";
 import logo from "../../app/assets/images/logo/logo2.png";
 
 const SunIcon = () => (
@@ -21,8 +24,31 @@ const MoonIcon = () => (
 
 export default function SiteNavbar() {
   const { isDark, toggleTheme } = useTheme();
+  const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [hidden, setHidden] = useState(false);
+  const prevScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY > prevScrollY.current && currentY > 80) {
+        setHidden(true);
+      } else if (currentY < prevScrollY.current) {
+        setHidden(false);
+      }
+      prevScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
   return (
-    <Navbar bg="light" expand="lg" sticky="top" className="cv-navbar">
+    <Navbar bg="light" expand="lg" className={`cv-navbar${hidden ? " cv-navbar--hidden" : ""}`}>
       <Container>
         {/* Logo */}
         <Navbar.Brand as={NavLink} to="/" className="cv-brand">
@@ -43,8 +69,8 @@ export default function SiteNavbar() {
             <Nav.Link as={NavLink} to="/insumos">
               Insumos
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/contactos">
-              Contactos
+            <Nav.Link as={NavLink} to="/contacto">
+              Contacto
             </Nav.Link>
             <Nav.Link as={NavLink} to="/presupuestos">
               Presupuestos
@@ -64,12 +90,36 @@ export default function SiteNavbar() {
             >
               {isDark ? <SunIcon /> : <MoonIcon />}
             </button>
-            <Button
-              className="cv-login-btn"
-              variant="outline-light"
-            >
-              Iniciar Sesión
-            </Button>
+
+            {user ? (
+              <NavDropdown
+                title={user.displayName || user.email}
+                id="user-menu"
+                align="end"
+                className="cv-user-dropdown"
+              >
+                {isAdmin && (
+                  <>
+                    <NavDropdown.Item as={NavLink} to="/admin">
+                      Panel Admin
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                  </>
+                )}
+                <NavDropdown.Item onClick={handleLogout}>
+                  Cerrar sesión
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <Button
+                as={NavLink}
+                to="/login"
+                className="cv-login-btn"
+                variant="outline-light"
+              >
+                Iniciar Sesión
+              </Button>
+            )}
           </div>
         </Navbar.Collapse>
       </Container>

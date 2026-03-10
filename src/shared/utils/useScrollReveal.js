@@ -23,7 +23,8 @@ export function useScrollReveal(options = {}) {
     return () => {
       observer.disconnect();
       clearTimeout(timeoutRef.current);
-    };  }, []);
+    };
+  }, []);
 
   return [ref, isVisible];
 }

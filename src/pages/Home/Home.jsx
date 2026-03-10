@@ -1,4 +1,5 @@
-﻿import { Container, Row, Col, Button, Carousel } from "react-bootstrap";
+﻿import { useState, useEffect } from "react";
+import { Container, Row, Col, Button, Carousel, Spinner } from "react-bootstrap";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import HeroImage from "../../app/assets/images/hero.svg";
 import Algodon from "../../app/assets/images/algodon.png";
@@ -6,69 +7,100 @@ import AlgodonVideo from "../../app/assets/images/algodon.mp4";
 import AlgodonPororoVideo from "../../app/assets/images/algodon-pororo.mp4";
 import Logo from "../../app/assets/images/logo/logo.png";
 import LogoAlt from "../../app/assets/images/logo/logo2.png";
-import AlgodonM4 from "../../app/assets/images/models/algodonM4_s.png";
-import AlgodonM5 from "../../app/assets/images/models/algodonM5.png";
-import PororoM from "../../app/assets/images/models/pororoM.png";
-import AlgodonM from "../../app/assets/images/models/algodonM.png";
-import AlgodonM2 from "../../app/assets/images/models/algodonM2.png";
-import AlgodonM3 from "../../app/assets/images/models/algodonM3.png";
+import { getMaquinas } from "../../services/firebase/maquinas";
 import "./Home.css";
 
+function BenefitIcon({ type }) {
+ const iconProps = {
+ width: 20,
+ height: 20,
+ viewBox: "0 0 24 24",
+ fill: "none",
+ stroke: "#d63384",
+ strokeWidth: 1.5,
+ strokeLinecap: "round",
+ strokeLinejoin: "round",
+ "aria-hidden": "true",
+ };
+
+ if (type === "income") {
+ return (
+ <svg {...iconProps}>
+ <rect x="2.5" y="6" width="19" height="12" rx="2.5" />
+ <path d="M7.5 12h9" />
+ </svg>
+ );
+ }
+
+ if (type === "location") {
+ return (
+ <svg {...iconProps}>
+ <path d="M12 21s6-5.5 6-10a6 6 0 1 0-12 0c0 4.5 6 10 6 10Z" />
+ <circle cx="12" cy="11" r="2.1" />
+ </svg>
+ );
+ }
+
+ if (type === "cost") {
+ return (
+ <svg {...iconProps}>
+ <path d="M13 2 4 14h7l-1 8 10-13h-7l1-7Z" />
+ </svg>
+ );
+ }
+
+ if (type === "roi") {
+ return (
+ <svg {...iconProps}>
+ <path d="M4 18h16" />
+ <path d="m7 14 3-3 3 2 4-4" />
+ <path d="M17 9h3v3" />
+ </svg>
+ );
+ }
+
+ if (type === "demand") {
+ return (
+ <svg {...iconProps}>
+ <circle cx="12" cy="12" r="7" />
+ <circle cx="12" cy="12" r="3" />
+ <path d="M12 5v-2M19 12h2M12 19v2M3 12H1" />
+ </svg>
+ );
+ }
+
+ return (
+ <svg {...iconProps}>
+ <path d="M14.5 4.5a2.5 2.5 0 1 1 3.5 3.5l-8.5 8.5-4 1 1-4 8.5-8.5Z" />
+ <path d="m13 6 5 5" />
+ </svg>
+ );
+}
+
 export default function Home() {
- const models = [
- {
-   image: AlgodonM,
-   name: "CloudMaker Pro",
-   badge: "Más vendido",
-   tags: ["Automática", "Alta capacidad", "WiFi"],
-   gradient: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)",
-   orb: "rgba(124, 58, 237, 0.35)",
- },
- {
-   image: AlgodonM2,
-   name: "SugarCube Mini",
-   badge: "Compacta",
-   tags: ["Portátil", "Silenciosa", "Fácil uso"],
-   gradient: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)",
-   orb: "rgba(236, 72, 153, 0.3)",
- },
- {
-   image: AlgodonM3,
-   name: "Artisan All",
-   badge: "Premium",
-   tags: ["Táctil", "Multi-función", "Pro"],
-   gradient: "linear-gradient(135deg, #f9d976 0%, #f39f86 100%)",
-   orb: "rgba(251, 146, 60, 0.35)",
- },
- {
-   image: AlgodonM4,
-   name: "CloudMaker Lite",
-   badge: "Nuevo",
-   tags: ["Liviana", "Económica", "Plug & Play"],
-   gradient: "linear-gradient(135deg, #96fbc4 0%, #f9f586 100%)",
-   orb: "rgba(16, 185, 129, 0.32)",
- },
- {
-   image: AlgodonM5,
-   name: "CubeMini Pro",
-   badge: "Best value",
-   tags: ["Auto-limpieza", "Autonomía", "Eficiente"],
-   gradient: "linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)",
-   orb: "rgba(245, 158, 11, 0.3)",
- },
- {
-   image: PororoM,
-   name: "Artisan Event",
-   badge: "Edición especial",
-   tags: ["Alta producción", "LED", "Eventos"],
-   gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%)",
-   orb: "rgba(239, 68, 68, 0.3)",
- },
+ const GRADIENTS = [
+   { gradient: "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)", orb: "rgba(124, 58, 237, 0.35)" },
+   { gradient: "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)", orb: "rgba(236, 72, 153, 0.3)" },
+   { gradient: "linear-gradient(135deg, #f9d976 0%, #f39f86 100%)", orb: "rgba(251, 146, 60, 0.35)" },
+   { gradient: "linear-gradient(135deg, #96fbc4 0%, #f9f586 100%)", orb: "rgba(16, 185, 129, 0.32)" },
+   { gradient: "linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)", orb: "rgba(245, 158, 11, 0.3)" },
+   { gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #ffecd2 100%)", orb: "rgba(239, 68, 68, 0.3)" },
  ];
+
+ const [machines, setMachines] = useState([]);
+ const [loadingMachines, setLoadingMachines] = useState(true);
+
+ useEffect(() => {
+   getMaquinas()
+     .then(setMachines)
+     .catch(console.error)
+     .finally(() => setLoadingMachines(false));
+ }, []);
 
  const [modelsRef, modelsVisible] = useScrollReveal();
  const [benefitsRef, benefitsVisible] = useScrollReveal();
  const [vendingRef, vendingVisible] = useScrollReveal();
+ const [faqRef, faqVisible] = useScrollReveal();
  const [ctaRef, ctaVisible] = useScrollReveal({ rootMargin: "0px 0px -40px 0px" });
  const [aboutRef, aboutVisible] = useScrollReveal();
 
@@ -77,6 +109,27 @@ export default function Home() {
  { key: "top", type: "image", src: LogoAlt, alt: "Marca Coolvending", frameClass: "hero-frame-top" },
  { key: "bottom", type: "video", src: AlgodonPororoVideo, poster: Logo, alt: "Experiencia del producto", frameClass: "hero-frame-bottom" },
  ];
+
+ const faqItems = [
+ { question: "What is a Sweet Robo vending machine?", answer: "A Sweet Robo vending machine is a smart robotics vending machine that does not just sell products, it creates them live. Unlike traditional vending machines that only dispense pre-packed items, Sweet Robo machines use advanced robotic systems to produce fresh treats on demand, such as cotton candy, ice cream, popcorn, balloons, and other interactive products." },
+ { question: "Is a robotics-based vending machine business viable?", answer: "Yes. Robotics vending combines automation, low staffing needs, and high visual impact. With strategic placement in high-traffic areas, many operators achieve a strong return by offering products with attractive margins and quick production cycles." },
+ { question: "What kind of businesses can use Sweet Robo's smart vending machines?", answer: "They are ideal for malls, entertainment centers, cinemas, amusement parks, family venues, event agencies, fairs, hotels, airports, and entrepreneurs looking to add a modern, unattended point of sale." },
+ { question: "How much maintenance does a robotic vending machine require?", answer: "Maintenance is generally low and predictable. Most models include easy cleaning routines, consumable refills, and periodic preventive checks. With proper use, day-to-day operation remains simple and efficient." },
+ { question: "How do I start a vending machine business?", answer: "Start with a clear business plan: choose your machine type, define your target audience, evaluate locations, estimate costs and margins, and secure supplier and technical support. Then launch, monitor results, and optimize placement and pricing." },
+ { question: "How do I find a location for my vending machine business?", answer: "Prioritize high foot traffic, family audiences, and dwell-time spaces. Negotiate with venue owners, validate electrical and space requirements, and test performance using a pilot period before scaling to additional points." },
+ { question: "Can Sweet Robo help me start a smart vending machine business?", answer: "Absolutely. Coolvending can guide you from machine selection to setup, onboarding, and operational best practices, so you can launch faster and run your vending business with confidence." },
+ ];
+
+ const benefitItems = [
+ { icon: "income", title: "Ingresos pasivos reales", text: "La máquina genera ventas las 24hs, los 7 días de la semana, sin necesidad de personal dedicado." },
+ { icon: "location", title: "Ubicación estratégica", text: "Shoppings, ferias, parques, eventos — cualquier lugar con tráfico es una oportunidad de venta." },
+ { icon: "cost", title: "Bajo costo operativo", text: "Sin local, sin empleados fijos. Solo insumos y mantenimiento mínimo para maximizar tu margen." },
+ { icon: "roi", title: "ROI en meses, no años", text: "Nuestros clientes recuperan la inversión en un promedio de 4 a 6 meses según el punto de venta." },
+ { icon: "demand", title: "Producto con alta demanda", text: "El algodón de azúcar atrae a todas las edades. Es una experiencia, no solo un producto." },
+ { icon: "support", title: "Soporte incluido", text: "Acompañamos cada paso: instalación, capacitación y soporte técnico remoto cuando lo necesitás." },
+ ];
+
+ const [openFaq, setOpenFaq] = useState(0);
 
  return (
  <>
@@ -145,18 +198,28 @@ export default function Home() {
  <p className="models-subtitle">Elegí la máquina que mejor se adapta a tu negocio</p>
  </div>
  <Row className="g-4 justify-content-center">
- {models.map((m, idx) => (
- <Col xs={11} sm={8} md={5} lg={4} key={idx}>
+ {loadingMachines ? (
+ <div className="text-center py-5">
+ <Spinner animation="border" style={{ color: "var(--cv-gold)" }} />
+ </div>
+ ) : machines.length === 0 ? (
+ <p className="text-center py-4" style={{ color: "var(--cv-text-secondary)" }}>
+   No hay máquinas disponibles todavía.
+ </p>
+ ) : machines.map((m, idx) => {
+ const palette = GRADIENTS[idx % GRADIENTS.length];
+ return (
+ <Col xs={11} sm={8} md={5} lg={4} key={m.id}>
  <div className="product-card reveal-card" style={{ transitionDelay: `${idx * 0.12}s` }}>
- <div className="product-card-img-wrap" style={{ background: m.gradient }}>
- <div className="product-card-orb" style={{ background: m.orb }} />
- <img src={m.image} alt={m.name} className="product-card-img" />
- <span className="product-card-badge">{m.badge}</span>
+ <div className="product-card-img-wrap" style={{ background: palette.gradient }}>
+ <div className="product-card-orb" style={{ background: palette.orb }} />
+ {m.imagenURL && <img src={m.imagenURL} alt={m.nombre} className="product-card-img" />}
+ {m.badge && <span className="product-card-badge">{m.badge}</span>}
  </div>
  <div className="product-card-body">
- <h3 className="product-card-title">{m.name}</h3>
+ <h3 className="product-card-title">{m.nombre}</h3>
  <div className="product-card-tags">
- {m.tags.map((tag) => (
+ {(m.tags ?? m.caracteristicas ?? []).slice(0, 3).map((tag) => (
  <span key={tag} className="product-card-tag">{tag}</span>
  ))}
  </div>
@@ -164,7 +227,8 @@ export default function Home() {
  </div>
  </div>
  </Col>
- ))}
+ );
+ })}
  </Row>
  </Container>
  </section>
@@ -177,17 +241,10 @@ export default function Home() {
  <p className="models-subtitle">Un negocio que trabaja para vos, incluso cuando no estás</p>
  </div>
  <Row className="g-4">
- {[
- { icon: "💰", title: "Ingresos pasivos reales", text: "La máquina genera ventas las 24hs, los 7 días de la semana, sin necesidad de personal dedicado." },
- { icon: "📍", title: "Ubicación estratégica", text: "Shoppings, ferias, parques, eventos — cualquier lugar con tráfico es una oportunidad de venta." },
- { icon: "⚡", title: "Bajo costo operativo", text: "Sin local, sin empleados fijos. Solo insumos y mantenimiento mínimo para maximizar tu margen." },
- { icon: "📈", title: "ROI en meses, no años", text: "Nuestros clientes recuperan la inversión en un promedio de 4 a 6 meses según el punto de venta." },
- { icon: "🎯", title: "Producto con alta demanda", text: "El algodón de azúcar atrae a todas las edades. Es una experiencia, no solo un producto." },
- { icon: "🔧", title: "Soporte incluido", text: "Acompañamos cada paso: instalación, capacitación y soporte técnico remoto cuando lo necesitás." },
- ].map((item, i) => (
+ {benefitItems.map((item, i) => (
  <Col key={i} xs={12} sm={6} lg={4}>
  <div className="why-card reveal-card" style={{ transitionDelay: `${i * 0.1}s` }}>
- <div className="why-card-icon">{item.icon}</div>
+ <div className="why-card-icon"><BenefitIcon type={item.icon} /></div>
  <h4 className="why-card-title">{item.title}</h4>
  <p className="why-card-text">{item.text}</p>
  </div>
@@ -208,16 +265,19 @@ export default function Home() {
  <Col md={6} className="reveal-col--left">
  <div className="why-vending-carousel-wrap">
  <Carousel fade interval={3000} indicators controls className="why-vending-carousel">
- {models.map((m, i) => (
- <Carousel.Item key={i}>
- <div className="why-vending-carousel-slide" style={{ background: m.gradient }}>
- <img src={m.image} alt={m.name} className="why-vending-carousel-img" />
+ {machines.map((m, i) => {
+ const palette = GRADIENTS[i % GRADIENTS.length];
+ return (
+ <Carousel.Item key={m.id}>
+ <div className="why-vending-carousel-slide" style={{ background: palette.gradient }}>
+ {m.imagenURL && <img src={m.imagenURL} alt={m.nombre} className="why-vending-carousel-img" />}
  </div>
  <Carousel.Caption className="why-vending-carousel-caption">
- <span>{m.name}</span>
+ <span>{m.nombre}</span>
  </Carousel.Caption>
  </Carousel.Item>
- ))}
+ );
+ })}
  </Carousel>
  </div>
  </Col>
@@ -236,7 +296,11 @@ export default function Home() {
  "Soporte técnico remoto incluido en todo momento",
  ].map((item, i) => (
  <li key={i} className="why-vending-item">
- <span className="why-check">✔</span>
+ <span className="why-check">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4D4D4D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+ <polyline points="20 6 9 17 4 12" />
+ </svg>
+ </span>
  {item}
  </li>
  ))}
@@ -319,6 +383,47 @@ export default function Home() {
  <img src={HeroImage} alt="Visión Coolvending" className="img-fluid about-img" />
  </Col>
  </Row>
+ </Container>
+ </section>
+
+ <section ref={faqRef} className={`faq-section py-5 reveal-section${faqVisible ? " visible" : ""}`}>
+ <Container>
+ <div className="models-header text-center mb-5">
+ <span className="models-label">FAQ</span>
+ <h2 className="models-title">Preguntas Frecuentes</h2>
+ <p className="models-subtitle">Todo lo que necesitás saber para empezar en el negocio vending</p>
+ </div>
+ <div className="faq-list" role="list">
+ {faqItems.map((item, index) => {
+ const isOpen = openFaq === index;
+ return (
+ <article key={item.question} className={`faq-item${isOpen ? " is-open" : ""}`} role="listitem">
+ <button
+ type="button"
+ className="faq-question"
+ aria-expanded={isOpen}
+ aria-controls={`faq-panel-${index}`}
+ id={`faq-trigger-${index}`}
+ onClick={() => setOpenFaq((prev) => (prev === index ? -1 : index))}
+ >
+ <span>{item.question}</span>
+ <span className="faq-icon" aria-hidden="true">{isOpen ? "-" : "+"}</span>
+ </button>
+ <div
+ id={`faq-panel-${index}`}
+ role="region"
+ aria-labelledby={`faq-trigger-${index}`}
+ className="faq-answer"
+ aria-hidden={!isOpen}
+ >
+ <div className="faq-answer-inner">
+ <p>{item.answer}</p>
+ </div>
+ </div>
+ </article>
+ );
+ })}
+ </div>
  </Container>
  </section>
  </div>

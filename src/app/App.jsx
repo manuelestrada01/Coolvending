@@ -1,8 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "../shared/utils/ThemeContext";
+import { AuthProvider } from "../shared/utils/AuthContext";
+import ProtectedRoute from "../shared/utils/ProtectedRoute";
 
 import Navbar from "../shared/layout/Navbar";
 import Footer from "../shared/layout/Footer";
+import WhatsAppFloatButton from "../shared/layout/WhatsAppFloatButton";
 
 import Home from "../pages/Home/Home";
 import Servicios from "../pages/Servicios/Servicios";
@@ -11,34 +14,51 @@ import Contacto from "../pages/Contacto/Contacto";
 import Productos from "../pages/Productos/Productos";
 import Equipos from "../pages/Equipos/Equipos";
 import Insumos from "../pages/Insumos/Insumos";
-import Contactos from "../pages/Contactos/Contactos";
 import Presupuestos from "../pages/Presupuestos/Presupuestos";
 import News from "../pages/News/News";
+
+import Login from "../pages/Login/Login";
+import AdminLayout from "../pages/Admin/AdminLayout";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import MaquinasAdmin from "../pages/Admin/MaquinasAdmin";
 
 import ScrollToTop from "../shared/utils/ScrollToTop";
 
 function App() {
   return (
     <ThemeProvider>
-    <BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Navbar />
 
-      <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/equipos" element={<Equipos />} />
+            <Route path="/insumos" element={<Insumos />} />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route path="/presupuestos" element={<Presupuestos />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/login" element={<Login />} />
 
-      <Navbar />
+            {/* Admin — solo accesible a usuarios con rol "admin" */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="maquinas" element={<MaquinasAdmin />} />
+            </Route>
+          </Routes>
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/equipos" element={<Equipos />} />
-        <Route path="/insumos" element={<Insumos />} />
-        <Route path="/contactos" element={<Contactos />} />
-        <Route path="/presupuestos" element={<Presupuestos />} />
-        <Route path="/news" element={<News />} />
-
-      </Routes>
-
-      <Footer />
-
-    </BrowserRouter>
+          <Footer />
+          <WhatsAppFloatButton />
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
