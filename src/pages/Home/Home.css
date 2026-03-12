@@ -939,7 +939,7 @@
 }
 
 .why-card-icon {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 0.95rem;
@@ -958,6 +958,7 @@
 .why-card-title {
   font-size: 1.05rem;
   font-weight: 700;
+  text-align: center;
   color: #4D4D4D;
   margin-bottom: 0.6rem;
   transition: color 0.25s ease;
@@ -972,6 +973,7 @@
   color: var(--cv-text-secondary);
   line-height: 1.65;
   margin: 0;
+  text-align: center;
   transition: color 0.25s ease;
 }
 

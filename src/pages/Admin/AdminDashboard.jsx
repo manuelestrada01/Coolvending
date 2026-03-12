@@ -5,6 +5,8 @@ import { countCollection } from "../../services/firebase/maquinas";
 
 const STATS = [
   { key: "maquinas", label: "Máquinas", icon: "🏭", col: "maquinas" },
+  { key: "eventos", label: "Eventos publicados", icon: "🎪", col: "eventos" },
+  { key: "insumos", label: "Insumos", icon: "📦", col: "insumos" },
   { key: "contactos", label: "Mensajes de contacto", icon: "✉️", col: "contactos" },
   { key: "newsletter", label: "Suscriptores newsletter", icon: "📧", col: "newsletter" },
 ];
@@ -15,6 +17,18 @@ const ACTIONS = [
     icon: "🏭",
     title: "Gestionar Máquinas",
     desc: "Agregá, editá o eliminá máquinas y sus fotos.",
+  },
+  {
+    to: "/admin/eventos",
+    icon: "🎪",
+    title: "Gestionar Eventos",
+    desc: "Creá y editá eventos con fotos, fecha y detalle.",
+  },
+  {
+    to: "/admin/insumos",
+    icon: "📦",
+    title: "Gestionar Insumos",
+    desc: "Agregá insumos con imagen y precio para el catálogo.",
   },
 ];
 

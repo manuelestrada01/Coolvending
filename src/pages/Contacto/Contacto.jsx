@@ -3,6 +3,7 @@ import { Container, Row, Col, Spinner } from "react-bootstrap";
 import { saveContactMessage } from "../../services/firebase/firestore";
 import { validateContactForm } from "../../shared/utils/validators";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
+import PageHero from "../../shared/layout/PageHero";
 import "./Contacto.css";
 
 const INITIAL = { nombre: "", email: "", telefono: "", mensaje: "", _trap: "" };
@@ -44,63 +45,10 @@ export default function Contacto() {
   return (
     <>
       {/* ���� Hero ���� */}
-      <section className="ctc-hero">
-        <div aria-hidden="true">
-          <div className="ctc-orb ctc-orb--1" />
-          <div className="ctc-orb ctc-orb--2" />
-          <div className="ctc-orb ctc-orb--3" />
-          <div className="ctc-grid-overlay" />
-          <div className="ctc-particle ctc-particle--1" />
-          <div className="ctc-particle ctc-particle--2" />
-          <div className="ctc-particle ctc-particle--3" />
-          <div className="ctc-particle ctc-particle--4" />
-          <div className="ctc-particle ctc-particle--5" />
-          <div className="ctc-particle ctc-particle--6" />
-          <div className="ctc-particle ctc-particle--7" />
-        </div>
-
-        <Container className="ctc-hero-inner">
-          <span className="ctc-badge ctc-entrance ctc-entrance--0">Contacto</span>
-
-          <h1 className="ctc-hero-title ctc-entrance ctc-entrance--1">
-            Hablemos sobre<br />
-            <span className="ctc-gradient-text">tu próximo proyecto</span>
-          </h1>
-
-          <p className="ctc-hero-desc ctc-entrance ctc-entrance--2">
-            Completá el formulario o escribinos directamente.<br />
-            Te respondemos en menos de 24&nbsp;hs.
-          </p>
-
-          <div className="ctc-hero-actions ctc-entrance ctc-entrance--3">
-            <a
-              href="https://wa.me/5491112345678"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ctc-hero-cta ctc-hero-cta--wa"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.11 1.523 5.832L.057 23.57a.75.75 0 0 0 .918.943l5.84-1.53A11.95 11.95 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.705 9.705 0 0 1-4.953-1.356l-.355-.21-3.676.964.98-3.574-.23-.368A9.75 9.75 0 1 1 12 21.75z" />
-              </svg>
-              WhatsApp
-            </a>
-
-            <a href="mailto:hola@coolvending.com.ar" className="ctc-hero-cta ctc-hero-cta--mail">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <polyline points="2,4 12,13 22,4" />
-              </svg>
-              Email
-            </a>
-          </div>
-        </Container>
-
-        <div className="ctc-scroll-indicator" aria-hidden="true">
-          <span className="ctc-scroll-text">scroll</span>
-          <span className="ctc-scroll-line" />
-        </div>
-      </section>
+      <PageHero
+        title={<>Hablemos sobre<br /><span className="ph-gradient-text">tu próximo proyecto</span></>}
+        description={<>Completá el formulario o escribinos directamente.<br />Te respondemos en menos de 24 hs.</>}
+      />
 
       {/* ���� Contact section ���� */}
       <section className="ctc-section">

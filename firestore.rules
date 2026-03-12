@@ -1,0 +1,47 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper: verifica que el usuario autenticado sea admin ──
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // ── Usuarios: solo el propio usuario o un admin puede leer/escribir
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // ── Máquinas: lectura pública, escritura solo admin ──
+    match /maquinas/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Eventos: lectura pública, escritura solo admin ──
+    match /eventos/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Insumos: lectura pública, escritura solo admin ──
+    match /insumos/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Contactos: cualquiera puede crear, solo admin puede leer ──
+    match /contactos/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Newsletter: cualquiera puede crear, solo admin puede leer ──
+    match /newsletter/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

@@ -4,7 +4,7 @@
   --cv-card-bg: #f5ede6;      /* Fondos de Sección/Tarjetas - Crema más intenso */
   --cv-gold: #d63384;          /* Primario - Magenta */
   --cv-amber: #f5a524;         /* Acento - Ámbar Vibrante */
-  --cv-text-primary: #1a1a1a;  /* Texto Principal - Casi negro */
+  --cv-text-primary: #4D4D4D;  /* Texto Principal - Gris topo */
   --cv-text-secondary: #6b7280;/* Texto Secundario - Gris medio */
   --cv-border: #e8ddd5;        /* Bordes Sutiles - Crema oscuro */
   /* Aliases para compatibilidad */
@@ -12,13 +12,13 @@
   --cv-brown: #d63384;
   --cv-caramel: #d63384;
   --cv-light: #6b7280;
-  --cv-cream: #1a1a1a;
+  --cv-cream: #4D4D4D;
 }
 
 html, body {
   overflow-x: hidden;
   background-color: #fdf8f4;
-  color: #1a1a1a;
+  color: #4D4D4D;
   transition: background-color 0.3s ease, color 0.3s ease;
   padding-top: 64px;
 }

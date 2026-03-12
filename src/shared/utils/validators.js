@@ -72,3 +72,27 @@ export function validateMaquinaForm({ nombre, categoria, descripcion }) {
   if (!isNonEmptyString(descripcion, 3000)) errors.descripcion = "Descripción requerida (máx. 3000 caracteres).";
   return { ok: Object.keys(errors).length === 0, errors };
 }
+
+const CATEGORIAS_EVENTO = ["Cumpleaños", "Corporativo", "Social", "Feria", "Escolar", "Casamiento", "Otro"];
+
+export function validateEventoForm({ titulo, ubicacion, detalle, fecha, categoria }) {
+  const errors = {};
+  if (!isNonEmptyString(titulo, 120)) errors.titulo = "Título requerido (máx. 120 caracteres).";
+  if (!isNonEmptyString(ubicacion, 150)) errors.ubicacion = "Ubicación requerida (máx. 150 caracteres).";
+  if (!isNonEmptyString(detalle, 2000)) errors.detalle = "Detalle requerido (máx. 2000 caracteres).";
+  if (!CATEGORIAS_EVENTO.includes(categoria)) errors.categoria = "Categoría inválida.";
+  if (!fecha) errors.fecha = "Fecha requerida.";
+  return { ok: Object.keys(errors).length === 0, errors };
+}
+
+const MAQUINAS_INSUMO = ["Algodón de azúcar", "Pochoclos", "Ambas"];
+
+export function validateInsumoForm({ nombre, descripcion, precio, maquina }) {
+  const errors = {};
+  if (!isNonEmptyString(nombre, 120)) errors.nombre = "Nombre requerido (máx. 120 caracteres).";
+  if (!isNonEmptyString(descripcion, 2000)) errors.descripcion = "Descripción requerida (máx. 2000 caracteres).";
+  const p = Number(precio);
+  if (isNaN(p) || p < 0) errors.precio = "El precio debe ser un número positivo.";
+  if (!MAQUINAS_INSUMO.includes(maquina)) errors.maquina = "Máquina inválida.";
+  return { ok: Object.keys(errors).length === 0, errors };
+}

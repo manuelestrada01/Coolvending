@@ -15,12 +15,14 @@ import Productos from "../pages/Productos/Productos";
 import Equipos from "../pages/Equipos/Equipos";
 import Insumos from "../pages/Insumos/Insumos";
 import Presupuestos from "../pages/Presupuestos/Presupuestos";
-import News from "../pages/News/News";
+import Eventos from "../pages/Eventos/Eventos";
 
 import Login from "../pages/Login/Login";
 import AdminLayout from "../pages/Admin/AdminLayout";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import MaquinasAdmin from "../pages/Admin/MaquinasAdmin";
+import EventosAdmin from "../pages/Admin/EventosAdmin";
+import InsumosAdmin from "../pages/Admin/InsumosAdmin";
 
 import ScrollToTop from "../shared/utils/ScrollToTop";
 
@@ -38,7 +40,7 @@ function App() {
             <Route path="/insumos" element={<Insumos />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/presupuestos" element={<Presupuestos />} />
-            <Route path="/news" element={<News />} />
+            <Route path="/eventos" element={<Eventos />} />
             <Route path="/login" element={<Login />} />
 
             {/* Admin — solo accesible a usuarios con rol "admin" */}
@@ -52,6 +54,8 @@ function App() {
             >
               <Route index element={<AdminDashboard />} />
               <Route path="maquinas" element={<MaquinasAdmin />} />
+              <Route path="eventos" element={<EventosAdmin />} />
+              <Route path="insumos" element={<InsumosAdmin />} />
             </Route>
           </Routes>
 

@@ -75,8 +75,8 @@ export default function SiteNavbar() {
             <Nav.Link as={NavLink} to="/presupuestos">
               Presupuestos
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/news">
-              News
+            <Nav.Link as={NavLink} to="/eventos">
+              Eventos
             </Nav.Link>
           </Nav>
 

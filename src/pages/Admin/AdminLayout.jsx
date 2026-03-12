@@ -5,6 +5,8 @@ import "./Admin.css";
 const NAV_ITEMS = [
   { to: "/admin", label: "Dashboard", icon: "🏠", end: true },
   { to: "/admin/maquinas", label: "Máquinas", icon: "🏭" },
+  { to: "/admin/eventos", label: "Eventos", icon: "🎪" },
+  { to: "/admin/insumos", label: "Insumos", icon: "📦" },
 ];
 
 export default function AdminLayout() {

@@ -20,7 +20,7 @@ export async function getMaquinas() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-const ALLOWED_COLLECTIONS = new Set(["maquinas", "contactos", "newsletter"]);
+const ALLOWED_COLLECTIONS = new Set(["maquinas", "contactos", "newsletter", "eventos", "insumos"]);
 
 export async function countCollection(colName) {
   if (!ALLOWED_COLLECTIONS.has(colName)) {

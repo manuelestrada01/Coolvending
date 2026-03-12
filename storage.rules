@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ── Helper: verifica que el usuario autenticado sea admin ──
+    function isAdmin() {
+      return request.auth != null &&
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // ── Imágenes de máquinas: lectura pública, escritura solo admin ──
+    match /maquinas/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Imágenes de eventos: lectura pública, escritura solo admin ──
+    match /eventos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Imágenes de insumos: lectura pública, escritura solo admin ──
+    match /insumos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

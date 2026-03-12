@@ -229,16 +229,25 @@
 }
 
 .ctc-hero-cta--mail {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(8px);
+  background: transparent;
+  color: var(--cv-text-primary);
+  border: 2px solid var(--cv-border);
 }
 .ctc-hero-cta--mail:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(214, 51, 132, 0.08);
+  border-color: rgba(214, 51, 132, 0.5);
+  color: #d63384;
   transform: translateY(-2px);
+}
+
+[data-theme="dark"] .ctc-hero-cta--mail {
   color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+[data-theme="dark"] .ctc-hero-cta--mail:hover {
+  background: rgba(214, 51, 132, 0.15);
+  border-color: rgba(214, 51, 132, 0.5);
+  color: #f472b6;
 }
 
 /* Scroll indicator */
