@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { Container, Row, Col, Button, Carousel, Spinner } from "react-bootstrap";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import HeroImage from "../../app/assets/images/hero.svg";
@@ -7,6 +8,9 @@ import AlgodonVideo from "../../app/assets/images/algodon.mp4";
 import AlgodonPororoVideo from "../../app/assets/images/algodon-pororo.mp4";
 import Logo from "../../app/assets/images/logo/logo.png";
 import LogoAlt from "../../app/assets/images/logo/logo2.png";
+import EventoImg1 from "../../app/assets/images/eventos/evento1.png";
+import EventoImg2 from "../../app/assets/images/eventos/evento2.png";
+import EventoAlgodon from "../../app/assets/images/eventos/algodoncito.png";
 import { getMaquinas } from "../../services/firebase/maquinas";
 import "./Home.css";
 
@@ -103,6 +107,7 @@ export default function Home() {
  const [faqRef, faqVisible] = useScrollReveal();
  const [ctaRef, ctaVisible] = useScrollReveal({ rootMargin: "0px 0px -40px 0px" });
  const [aboutRef, aboutVisible] = useScrollReveal();
+ const [eventsRef, eventsVisible] = useScrollReveal();
 
  const heroFrames = [
  { key: "main", type: "video", src: AlgodonVideo, poster: Algodon, alt: "Máquina en acción", frameClass: "hero-frame-main" },
@@ -150,8 +155,7 @@ export default function Home() {
  Tecnología punta para un negocio dulce y rentable.
  </p>
  <div className="d-flex gap-2 hero-buttons-animated">
- <Button variant="light" className="hero-btn-primary">Solicitar presupuesto</Button>
- <Button variant="outline-secondary">Ver demostración</Button>
+ <Button as={NavLink} to="/presupuestos" variant="light" className="hero-btn-primary">Solicitar presupuesto</Button>
  </div>
  </Col>
  <Col md={7} className="text-center hero-media-col">
@@ -171,6 +175,13 @@ export default function Home() {
  </Col>
  </Row>
  </Container>
+
+ {/* Wave bottom divider */}
+ <div className="hero-wave" aria-hidden="true">
+   <svg viewBox="0 0 1440 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+     <path d="M0,32 C240,64 480,0 720,32 C960,64 1200,0 1440,32 L1440,64 L0,64 Z" />
+   </svg>
+ </div>
  </section>
 
  <div className="home-canvas">
@@ -308,7 +319,57 @@ export default function Home() {
  <p className="why-vending-closing">
  Un negocio que trabaja para vos las 24hs, los 7 días de la semana, fácil de operar y imposible de ignorar.
  </p>
- <button className="why-vending-cta">Hablemos de negocios →</button>
+ <NavLink to="/contacto" className="why-vending-cta text-decoration-none">Hablemos de negocios →</NavLink>
+ </Col>
+ </Row>
+ </Container>
+ </section>
+
+ {/* ===== HOME EVENTS PREVIEW SECTION ===== */}
+ <section ref={eventsRef} className={`home-events py-5 reveal-section${eventsVisible ? " visible" : ""}`}>
+ <Container>
+ <Row className="align-items-center g-5">
+ <Col md={6} className="reveal-col--left">
+ <div className="models-header mb-2 text-center"><span className="models-label">EVENTOS</span></div>
+ <h2 className="models-title">Tu evento, una experiencia única y dulce</h2>
+ <p className="why-vending-intro">
+ Llevamos nuestra máquina directamente a tu evento. Casamientos, cumpleaños, corporativos y ferias — el espectáculo de ver el algodón crearse en el momento convierte cualquier reunión en algo memorable.
+ </p>
+ <ul className="why-vending-list">
+ {[
+ "Alquiler por horas o día completo",
+ "Operador incluido sin costo adicional",
+ "Personalización de colores y sabores",
+ "Ideal para todo tipo de audiencias",
+ ].map((item, i) => (
+ <li key={i} className="why-vending-item">
+ <span className="why-check">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4D4D4D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+ <polyline points="20 6 9 17 4 12" />
+ </svg>
+ </span>
+ {item}
+ </li>
+ ))}
+ </ul>
+ <Link to="/eventos" className="why-vending-cta mt-3 d-inline-block text-decoration-none">
+ Ver todos los eventos →
+ </Link>
+ </Col>
+ <Col md={6} className="reveal-col--right">
+ <div className="home-events-carousel-wrap">
+ <Carousel fade interval={3500} indicators controls={false} className="home-events-carousel">
+ <Carousel.Item>
+ <img src={EventoImg1} alt="Evento en acción" className="home-events-carousel-img" />
+ </Carousel.Item>
+ <Carousel.Item>
+ <img src={EventoImg2} alt="Experiencia de evento" className="home-events-carousel-img" />
+ </Carousel.Item>
+ <Carousel.Item>
+ <img src={EventoAlgodon} alt="Algodón de azúcar" className="home-events-carousel-img" />
+ </Carousel.Item>
+ </Carousel>
+ </div>
  </Col>
  </Row>
  </Container>
@@ -328,7 +389,7 @@ export default function Home() {
  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
  </div>
  <p className="contact-cta-text">Completá un formulario y nuestro equipo te contacta a la brevedad.</p>
- <button className="contact-cta-btn">Solicitar info</button>
+ <NavLink to="/contacto" className="contact-cta-btn text-decoration-none">Solicitar info</NavLink>
  </div>
  </Col>
  <Col md={4}>
@@ -431,3 +492,4 @@ export default function Home() {
  </>
  );
 }
+

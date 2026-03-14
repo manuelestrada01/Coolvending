@@ -44,3 +44,14 @@ export async function saveNewsletterEmail(email) {
     creadoEn: serverTimestamp(),
   });
 }
+
+export async function savePresupuesto(data) {
+  return addDoc(collection(db, "presupuestos"), {
+    nombre: data.nombre,
+    email: data.email || "",
+    mensaje: data.mensaje || "",
+    maquinas: data.maquinas,
+    canal: data.canal,
+    creadoEn: serverTimestamp(),
+  });
+}

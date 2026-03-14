@@ -3,6 +3,7 @@ import {
   addDoc,
   getDocs,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc,
   serverTimestamp,
@@ -47,6 +48,12 @@ export async function getInsumos() {
   const q = query(collection(db, "insumos"), orderBy("creadoEn", "asc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function getInsumoById(id) {
+  const snap = await getDoc(doc(db, "insumos", id));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() };
 }
 
 export async function addInsumo(data, imageFile) {

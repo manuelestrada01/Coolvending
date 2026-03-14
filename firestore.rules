@@ -9,9 +9,26 @@ service cloud.firestore {
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
     }
 
-    // ── Usuarios: solo el propio usuario o un admin puede leer/escribir
+    // ── Usuarios ──
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      // Cada usuario puede leer su propio doc
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      // Puede crear su propio doc (registro), pero solo con role=usuario y puedeVerPrecios=false
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.role == "usuario"
+        && request.resource.data.puedeVerPrecios == false;
+
+      // Puede actualizar su propio doc, pero NO puede cambiar role ni puedeVerPrecios
+      allow update: if request.auth != null && request.auth.uid == uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(["puedeVerPrecios", "role"]);
+
+      // Admin puede leer todos los docs (get y list/query)
+      allow read: if isAdmin();
+
+      // Admin solo puede modificar puedeVerPrecios
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["puedeVerPrecios"]);
     }
 
     // ── Máquinas: lectura pública, escritura solo admin ──
@@ -40,6 +57,12 @@ service cloud.firestore {
 
     // ── Newsletter: cualquiera puede crear, solo admin puede leer ──
     match /newsletter/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ── Presupuestos: cualquiera puede crear, solo admin puede leer ──
+    match /presupuestos/{docId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }

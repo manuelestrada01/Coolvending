@@ -283,18 +283,12 @@
 
 /* ─── Main contact section ────────────────────────── */
 .ctc-section {
-  padding: 6rem 0 7rem;
+  padding: 2.5rem 0 7rem;
   background: var(--cv-black);
   position: relative;
 }
 .ctc-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 85% 5%, rgba(214, 51, 132, 0.055) 0%, transparent 45%),
-    radial-gradient(ellipse at 10% 95%, rgba(245, 165, 36, 0.04) 0%, transparent 45%);
-  pointer-events: none;
+  display: none;
 }
 
 /* ─── Sidebar ─────────────────────────────────────── */
@@ -522,6 +516,39 @@ a.ctc-contact-card:hover .ctc-contact-arrow {
 .ctc-input--error { border-color: #e53e3e !important; box-shadow: none !important; }
 .ctc-textarea { min-height: 140px; }
 .ctc-field-err { font-size: 0.78rem; color: #e53e3e; font-weight: 600; }
+
+/* ─── Select / Motivo ─────────────────────────────── */
+.ctc-select-wrap {
+  position: relative;
+}
+
+.ctc-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+.ctc-select option {
+  background: var(--cv-card-bg);
+  color: var(--cv-text-primary);
+}
+
+.ctc-select-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--cv-text-secondary);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.ctc-select-wrap:focus-within .ctc-select-chevron {
+  color: var(--cv-gold);
+}
 
 /* ─── Alerts ──────────────────────────────────────── */
 .ctc-alert {

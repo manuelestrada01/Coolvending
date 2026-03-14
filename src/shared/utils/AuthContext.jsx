@@ -8,17 +8,21 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
+  const [puedeVerPrecios, setPuedeVerPrecios] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        setRole(snap.exists() ? snap.data().role : "usuario");
+        const data = snap.exists() ? snap.data() : {};
+        setRole(data.role ?? "usuario");
+        setPuedeVerPrecios(data.puedeVerPrecios === true);
         setUser(firebaseUser);
       } else {
         setUser(null);
         setRole(null);
+        setPuedeVerPrecios(false);
       }
       setLoading(false);
     });
@@ -27,7 +31,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, role, loading, isAdmin: role === "admin" }}
+      value={{ user, role, loading, isAdmin: role === "admin", puedeVerPrecios }}
     >
       {children}
     </AuthContext.Provider>

@@ -14,6 +14,7 @@ import Contacto from "../pages/Contacto/Contacto";
 import Productos from "../pages/Productos/Productos";
 import Equipos from "../pages/Equipos/Equipos";
 import Insumos from "../pages/Insumos/Insumos";
+import InsumoDetalle from "../pages/Insumos/InsumoDetalle";
 import Presupuestos from "../pages/Presupuestos/Presupuestos";
 import Eventos from "../pages/Eventos/Eventos";
 
@@ -23,6 +24,7 @@ import AdminDashboard from "../pages/Admin/AdminDashboard";
 import MaquinasAdmin from "../pages/Admin/MaquinasAdmin";
 import EventosAdmin from "../pages/Admin/EventosAdmin";
 import InsumosAdmin from "../pages/Admin/InsumosAdmin";
+import UsuariosAdmin from "../pages/Admin/UsuariosAdmin";
 
 import ScrollToTop from "../shared/utils/ScrollToTop";
 
@@ -38,6 +40,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/equipos" element={<Equipos />} />
             <Route path="/insumos" element={<Insumos />} />
+            <Route path="/insumos/:id" element={<InsumoDetalle />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/presupuestos" element={<Presupuestos />} />
             <Route path="/eventos" element={<Eventos />} />
@@ -56,6 +59,7 @@ function App() {
               <Route path="maquinas" element={<MaquinasAdmin />} />
               <Route path="eventos" element={<EventosAdmin />} />
               <Route path="insumos" element={<InsumosAdmin />} />
+              <Route path="usuarios" element={<UsuariosAdmin />} />
             </Route>
           </Routes>
 

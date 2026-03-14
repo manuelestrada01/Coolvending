@@ -242,23 +242,82 @@ body[data-theme="dark"] {
 .cv-brand img{
   display: block;
   width: auto;
-  max-height: 120px; /* logo reducido proporcionalmente */
-  /* center by offsetting equally above and below the navbar */
-  margin-top: -8px;
-  margin-bottom: -8px;
+  max-height: 42px; /* mobile: compact */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Animated hamburger button */
+.cv-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 4px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  cursor: pointer;
+}
+.cv-hamburger:focus,
+.cv-hamburger:active,
+.cv-hamburger:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.cv-hamburger__line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--cv-gold);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+
+/* X state when open */
+.cv-hamburger--open .cv-hamburger__line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.cv-hamburger--open .cv-hamburger__line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.cv-hamburger--open .cv-hamburger__line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile: move theme+profile to the top of the expanded menu via CSS order */
+@media (max-width: 991px) {
+  .cv-navbar .navbar-collapse > * {
+    order: 1;
+  }
+  .cv-navbar .cv-navbar-actions {
+    order: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--cv-border);
+    margin-bottom: 0.25rem;
+  }
 }
 
 @media (min-width: 992px) {
   .cv-navbar{
-    padding-top: 0.4rem; /* ~6.5px */
-    padding-bottom: 0.4rem; /* ~6.5px */
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     overflow: visible;
   }
 
   .cv-brand img{
-    max-height: 96px; /* proporción más pequeña */
-    margin-top: -12px;
-    margin-bottom: -12px;
+    max-height: 80px; /* desktop: slightly larger */
+    margin-top: -10px;
+    margin-bottom: -10px;
   }
 }
 

@@ -30,6 +30,12 @@ const ACTIONS = [
     title: "Gestionar Insumos",
     desc: "Agregá insumos con imagen y precio para el catálogo.",
   },
+  {
+    to: "/admin/usuarios",
+    icon: "👥",
+    title: "Gestionar Usuarios",
+    desc: "Habilitá o revocá acceso a precios de insumos por cliente.",
+  },
 ];
 
 export default function AdminDashboard() {

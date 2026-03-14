@@ -60,17 +60,7 @@ export default function Footer() {
             </ul>
           </Col>
 
-          <Col lg={2} md={6} className="footer-section footer-right-col">
-            <h5 className="footer-title">Compañía</h5>
-            <ul className="footer-links">
-              <li><Link to="/servicios">Algodón Azúcar</Link></li>
-              <li><Link to="/servicios">Pochoclos</Link></li>
-              <li><Link to="/galeria">Galería</Link></li>
-              <li><Link to="/contacto">Contacto</Link></li>
-            </ul>
-          </Col>
-
-          <Col lg={4} md={12} className="footer-section footer-right-col footer-newsletter-col">
+          <Col lg={4} md={12} className="footer-section footer-newsletter-col">
             <div className="footer-newsletter-card">
               <h5 className="footer-title">Newsletter</h5>
               <p className="footer-text">Recibí novedades, promociones y lanzamientos.</p>

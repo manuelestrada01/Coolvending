@@ -148,121 +148,188 @@
 
 .ins-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 /* ─── Card ───────────────────────────────────────── */
 .ins-card {
-  background: var(--cv-card-bg);
-  border: 1px solid var(--cv-border);
-  border-radius: 18px;
+  position: relative;
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  position: relative;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--cv-card-bg);
+  border: 1px solid var(--cv-border);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease;
 }
 
+/* Top accent bar — uses per-card --accent color */
 .ins-card::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 18px;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent, #d63384) 0%, rgba(245,165,36,0.8) 100%);
   opacity: 0;
-  transition: opacity 0.3s ease;
-  background: linear-gradient(135deg, rgba(214,51,132,0.04) 0%, rgba(245,165,36,0.04) 100%);
-}
-
-.ins-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(214, 51, 132, 0.12);
-  border-color: rgba(214, 51, 132, 0.35);
+  transition: opacity 0.4s ease;
+  z-index: 4;
 }
 
 .ins-card:hover::before {
   opacity: 1;
 }
 
+/* Glowing inner border on hover */
+.ins-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1.5px solid transparent;
+  background: linear-gradient(135deg, rgba(214,51,132,0.55) 0%, rgba(245,165,36,0.45) 100%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.ins-card:hover::after {
+  opacity: 1;
+}
+
+.ins-card:hover {
+  transform: translateY(-9px);
+  box-shadow: 0 32px 64px rgba(214, 51, 132, 0.18), 0 6px 22px rgba(0,0,0,0.18);
+  border-color: transparent;
+}
+
 /* ─── Card image ─────────────────────────────────── */
 .ins-card-img {
   width: 100%;
-  height: 200px;
+  height: 320px;
+  flex-shrink: 0;
   object-fit: cover;
   display: block;
-  flex-shrink: 0;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ins-card:hover .ins-card-img {
+  transform: scale(1.07);
 }
 
 .ins-card-img--placeholder {
+  width: 100%;
+  height: 320px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 4.5rem;
   background: var(--cv-black);
-  border-bottom: 1px solid var(--cv-border);
 }
 
-/* ─── Card body ──────────────────────────────────── */
-.ins-card-body {
-  padding: 1.25rem 1.5rem 1.5rem;
+/* ─── Info panel ─────────────────────────────────── */
+.ins-card-overlay {
+  position: relative;
+  padding: 1.4rem 1.5rem 1.5rem;
+  background: var(--cv-card-bg);
+  border-top: 1px solid var(--cv-border);
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex: 1;
 }
 
+/* Animated arrow that appears on hover */
+.ins-card-overlay::after {
+  content: "\2192"; /* → */
+  position: absolute;
+  bottom: 1.35rem;
+  right: 1.35rem;
+  font-size: 1.1rem;
+  color: var(--accent, #d63384);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.ins-card:hover .ins-card-overlay::after {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 .ins-card-tag {
-  display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  padding: 0.2rem 0.65rem;
+  padding: 0.22rem 0.7rem;
   border-radius: 999px;
   border: 1px solid;
   width: fit-content;
 }
 
 .ins-card-name {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.08rem;
+  font-weight: 800;
   color: var(--cv-text-primary);
-  margin: 0;
-  line-height: 1.3;
+  margin: 0 0 0.1rem;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 
-.ins-card-desc {
-  font-size: 0.88rem;
-  color: var(--cv-text-secondary);
-  line-height: 1.65;
-  margin: 0;
-  flex: 1;
+/* Short accent line under name */
+.ins-card-name::after {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--accent, #d63384);
+  margin-top: 0.5rem;
+  transition: width 0.35s ease;
 }
 
-.ins-card-footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+.ins-card:hover .ins-card-name::after {
+  width: 3rem;
 }
 
 .ins-card-price {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 800;
   color: var(--cv-gold);
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.ins-card-qty {
-  font-size: 0.75rem;
+.ins-price-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--cv-text-secondary);
-  background: var(--cv-border);
-  border-radius: 999px;
-  padding: 0.2rem 0.65rem;
-  white-space: nowrap;
-  align-self: flex-end;
+  border: 1px dashed var(--cv-border);
+  border-radius: 99px;
+  padding: 0.22rem 0.75rem;
+  text-decoration: none;
+  width: fit-content;
+}
+
+/* ─── Hover CTA arrow ────────────────────────────── */
+.ins-card-cta {
+  display: none;
 }
 
 /* ─── Card stagger reveal ────────────────────────── */

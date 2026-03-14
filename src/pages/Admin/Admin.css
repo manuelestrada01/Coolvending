@@ -388,3 +388,123 @@
     padding: 1.25rem;
   }
 }
+
+/* ─── Usuarios Admin ────────────────────────────────────────── */
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--cv-border);
+  border-radius: 12px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: var(--cv-text-primary);
+}
+
+.admin-table thead tr {
+  background: var(--cv-card-bg);
+  border-bottom: 1px solid var(--cv-border);
+}
+
+.admin-table th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cv-text-secondary);
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--cv-border);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(214, 51, 132, 0.03);
+}
+
+.admin-role-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(77, 77, 77, 0.08);
+  color: var(--cv-text-secondary);
+  border: 1px solid var(--cv-border);
+  text-transform: capitalize;
+}
+
+.admin-role-badge--admin {
+  background: rgba(214, 51, 132, 0.1);
+  color: #d63384;
+  border-color: rgba(214, 51, 132, 0.3);
+}
+
+.admin-precio-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.admin-precio-badge--on {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.admin-precio-badge--off {
+  background: rgba(107, 114, 128, 0.08);
+  color: var(--cv-text-secondary);
+  border: 1px solid var(--cv-border);
+}
+
+.admin-toggle-btn {
+  padding: 0.3rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-toggle-btn--on {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.admin-toggle-btn--on:hover {
+  background: #10b981;
+  color: #fff;
+}
+
+.admin-toggle-btn--off {
+  background: rgba(214, 51, 132, 0.08);
+  color: #d63384;
+  border-color: rgba(214, 51, 132, 0.3);
+}
+
+.admin-toggle-btn--off:hover {
+  background: #d63384;
+  color: #fff;
+}
+
+.admin-toggle-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+

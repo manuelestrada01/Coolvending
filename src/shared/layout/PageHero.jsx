@@ -34,6 +34,13 @@ export default function PageHero({ badge, title, description, children }) {
           {children && <div className="ph-actions ph-fade-3">{children}</div>}
         </div>
       </Container>
+
+      {/* Wave bottom divider */}
+      <div className="ph-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,32 C240,64 480,0 720,32 C960,64 1200,0 1440,32 L1440,64 L0,64 Z" />
+        </svg>
+      </div>
     </section>
   );
 }

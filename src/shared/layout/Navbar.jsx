@@ -27,15 +27,26 @@ export default function SiteNavbar() {
   const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [hidden, setHidden] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const prevScrollY = useRef(0);
+  const expandedRef = useRef(false);
+
+  const handleToggle = (val) => {
+    setExpanded(val);
+    expandedRef.current = val;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       const currentY = window.scrollY;
       if (currentY > prevScrollY.current && currentY > 80) {
+        // scrolling down: hide bar and close menu
         setHidden(true);
+        handleToggle(false);
       } else if (currentY < prevScrollY.current) {
+        // scrolling up: show bar but always collapsed
         setHidden(false);
+        handleToggle(false);
       }
       prevScrollY.current = currentY;
     };
@@ -48,7 +59,7 @@ export default function SiteNavbar() {
     navigate("/");
   };
   return (
-    <Navbar bg="light" expand="lg" className={`cv-navbar${hidden ? " cv-navbar--hidden" : ""}`}>
+    <Navbar bg="light" expand="lg" expanded={expanded} onToggle={handleToggle} className={`cv-navbar${hidden ? " cv-navbar--hidden" : ""}`}>
       <Container>
         {/* Logo */}
         <Navbar.Brand as={NavLink} to="/" className="cv-brand">
@@ -56,10 +67,17 @@ export default function SiteNavbar() {
           <span className="visually-hidden">CoolVending</span>
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="main-navbar" />
+        <Navbar.Toggle
+          aria-controls="main-navbar"
+          className={`cv-hamburger${expanded ? " cv-hamburger--open" : ""}`}
+        >
+          <span className="cv-hamburger__line" />
+          <span className="cv-hamburger__line" />
+          <span className="cv-hamburger__line" />
+        </Navbar.Toggle>
         <Navbar.Collapse id="main-navbar">
           {/* Centro */}
-          <Nav className="mx-auto cv-navlinks">
+          <Nav className="mx-auto cv-navlinks" onClick={() => handleToggle(false)}>
             <Nav.Link as={NavLink} to="/" end>
               Home
             </Nav.Link>
@@ -81,7 +99,7 @@ export default function SiteNavbar() {
           </Nav>
 
           {/* Derecha */}
-          <div className="d-flex gap-3 align-items-center">
+          <div className="d-flex gap-3 align-items-center cv-navbar-actions">
             <button
               className="cv-theme-toggle"
               onClick={toggleTheme}

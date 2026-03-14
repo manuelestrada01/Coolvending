@@ -1,0 +1,631 @@
+/* ═══════════════════════════════════════════════════
+   Presupuestos — Quote Request Page
+   ═══════════════════════════════════════════════════ */
+
+/* ─── Section wrapper ─────────────────────────────── */
+.pres-section {
+  background: var(--cv-black);
+  padding: 4rem 0 7rem;
+  min-height: 60vh;
+}
+
+/* ─── Step indicator ──────────────────────────────── */
+.pres-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 3rem;
+}
+
+.pres-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+}
+
+.pres-step-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border: 2px solid var(--cv-border);
+  color: var(--cv-text-secondary);
+  background: var(--cv-card-bg);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.pres-step-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cv-text-secondary);
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.pres-step-connector {
+  width: 56px;
+  height: 2px;
+  background: var(--cv-border);
+  margin: 0 0.6rem;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+/* Active step */
+.pres-step--active .pres-step-num {
+  background: linear-gradient(135deg, #d63384, #f5a524);
+  border-color: transparent;
+  color: #fff;
+}
+
+.pres-step--active .pres-step-label {
+  color: var(--cv-text-primary);
+}
+
+/* Done step */
+.pres-step--done .pres-step-num {
+  background: rgba(214, 51, 132, 0.15);
+  border-color: rgba(214, 51, 132, 0.5);
+  color: #d63384;
+}
+
+.pres-step--done .pres-step-label {
+  color: var(--cv-text-secondary);
+}
+
+/* ─── Panel ───────────────────────────────────────── */
+.pres-panel {
+  background: var(--cv-card-bg);
+  border: 1px solid var(--cv-border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  max-width: 860px;
+  margin: 0 auto;
+  animation: presFadeIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes presFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pres-panel-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--cv-text-primary);
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.pres-panel-sub {
+  font-size: 0.9rem;
+  color: var(--cv-text-secondary);
+  margin-bottom: 2rem;
+}
+
+.pres-empty {
+  color: var(--cv-text-secondary);
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* ─── Insumos grid (step 2) ───────────────────────── */
+.pres-insumos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pres-insumo-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border-radius: 14px;
+  border: 2px solid var(--cv-border);
+  background: var(--cv-black);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.pres-insumo-card:hover {
+  border-color: rgba(245, 165, 36, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(245, 165, 36, 0.1);
+}
+
+.pres-insumo-card--selected {
+  border-color: #f5a524;
+  background: rgba(245, 165, 36, 0.06);
+  box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.15);
+}
+
+.pres-insumo-card--selected .pres-machine-check {
+  opacity: 1;
+  transform: scale(1);
+  background: #f5a524;
+}
+
+.pres-insumo-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.pres-insumo-img--placeholder {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  background: var(--cv-card-bg);
+  flex-shrink: 0;
+}
+
+.pres-insumo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.pres-insumo-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cv-text-primary);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pres-insumo-qty {
+  font-size: 0.72rem;
+  color: var(--cv-text-secondary);
+}
+
+/* ─── Nav right group ─────────────────────────────── */
+.pres-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* ─── Summary insumo tag variant ──────────────────── */
+.pres-summary-tag--insumo {
+  color: #b45309;
+  background: rgba(245, 165, 36, 0.12);
+  border-color: rgba(245, 165, 36, 0.35);
+}
+
+/* ─── Machines grid ───────────────────────────────── */
+.pres-machines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* ─── Machine card ────────────────────────────────── */
+.pres-machine-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 0.75rem 1rem;
+  border-radius: 16px;
+  border: 2px solid var(--cv-border);
+  background: var(--cv-black);
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  text-align: center;
+}
+
+.pres-machine-card:hover {
+  border-color: rgba(214, 51, 132, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(214, 51, 132, 0.1);
+}
+
+.pres-machine-card--selected {
+  border-color: #d63384;
+  background: rgba(214, 51, 132, 0.06);
+  box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.15);
+}
+
+.pres-machine-img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.pres-machine-img--placeholder {
+  width: 100%;
+  height: 110px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  background: var(--cv-card-bg);
+}
+
+.pres-machine-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cv-text-primary);
+  line-height: 1.3;
+}
+
+/* Checkmark badge */
+.pres-machine-check {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d63384;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pres-machine-card--selected .pres-machine-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─── Channel grid ────────────────────────────────── */
+.pres-channels-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 480px) {
+  .pres-channels-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pres-channel-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.25rem 1.5rem;
+  border-radius: 20px;
+  border: 2px solid var(--cv-border);
+  background: var(--cv-black);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.pres-channel-card:hover {
+  border-color: rgba(214, 51, 132, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(214, 51, 132, 0.1);
+}
+
+.pres-channel-card--selected {
+  border-color: #d63384;
+  background: rgba(214, 51, 132, 0.06);
+  box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.15);
+}
+
+/* channel icon circles */
+.pres-channel-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.pres-channel-icon--email {
+  background: rgba(214, 51, 132, 0.1);
+  color: #d63384;
+}
+
+.pres-channel-icon--wa {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+}
+
+.pres-channel-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--cv-text-primary);
+  margin: 0;
+}
+
+.pres-channel-desc {
+  font-size: 0.82rem;
+  color: var(--cv-text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Checkmark badge on channel card */
+.pres-channel-check {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #d63384;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pres-channel-card--selected .pres-channel-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─── Summary bar (step 3) ────────────────────────── */
+.pres-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: rgba(214, 51, 132, 0.06);
+  border: 1px solid rgba(214, 51, 132, 0.2);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.75rem;
+}
+
+.pres-summary-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cv-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding-top: 0.1rem;
+}
+
+.pres-summary-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pres-summary-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #d63384;
+  background: rgba(214, 51, 132, 0.1);
+  border: 1px solid rgba(214, 51, 132, 0.3);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+}
+
+/* ─── Form fields ─────────────────────────────────── */
+.pres-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.pres-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pres-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--cv-text-primary);
+  letter-spacing: 0.02em;
+}
+
+.pres-label-opt {
+  font-weight: 400;
+  color: var(--cv-text-secondary);
+}
+
+.pres-input {
+  width: 100%;
+  background: var(--cv-black);
+  border: 1.5px solid var(--cv-border);
+  border-radius: 12px;
+  color: var(--cv-text-primary);
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: none;
+  font-family: inherit;
+}
+
+.pres-input::placeholder { color: var(--cv-text-secondary); opacity: 0.6; }
+
+.pres-input:focus {
+  border-color: var(--cv-gold);
+  box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.11);
+}
+
+.pres-input--error { border-color: #e53e3e !important; box-shadow: none !important; }
+.pres-textarea { min-height: 110px; }
+.pres-field-err { font-size: 0.78rem; color: #e53e3e; font-weight: 600; }
+
+/* ─── Alert ───────────────────────────────────────── */
+.pres-alert {
+  border-radius: 12px;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.pres-alert--err {
+  background: rgba(229, 62, 62, 0.1);
+  border: 1px solid rgba(229, 62, 62, 0.35);
+  color: #e53e3e;
+}
+
+/* ─── Navigation buttons ──────────────────────────── */
+.pres-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.pres-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.72rem 1.6rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  border: none;
+}
+
+.pres-btn--primary {
+  background: linear-gradient(135deg, #d63384 0%, #f5a524 100%);
+  color: #fff;
+}
+
+.pres-btn--primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.pres-btn--primary:not(:disabled):hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.pres-btn--ghost {
+  background: transparent;
+  color: var(--cv-text-secondary);
+  border: 1.5px solid var(--cv-border);
+}
+
+.pres-btn--ghost:hover {
+  color: var(--cv-text-primary);
+  border-color: rgba(214, 51, 132, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ─── Success screen ──────────────────────────────── */
+.pres-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+  animation: presFadeIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pres-success-ring {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: rgba(214, 51, 132, 0.1);
+  border: 2px solid rgba(214, 51, 132, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d63384;
+  margin-bottom: 1.5rem;
+}
+
+.pres-success-ring svg { width: 34px; height: 34px; }
+
+.pres-success-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--cv-text-primary);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.pres-success-text {
+  font-size: 0.97rem;
+  color: var(--cv-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.pres-success-back {
+  background: transparent;
+  border: 1.5px solid var(--cv-border);
+  color: var(--cv-text-secondary);
+  border-radius: 999px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.pres-success-back:hover {
+  border-color: rgba(214, 51, 132, 0.5);
+  color: var(--cv-text-primary);
+}
+
+/* ─── Responsive ──────────────────────────────────── */
+@media (max-width: 600px) {
+  .pres-panel {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .pres-machines-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+
+  .pres-step-connector {
+    width: 32px;
+  }
+
+  .pres-step-label {
+    display: none;
+  }
+}

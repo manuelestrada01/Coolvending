@@ -77,6 +77,27 @@
   padding-bottom: 6.75rem !important;
 }
 
+/* Wave divider */
+.hero-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  line-height: 0;
+  pointer-events: none;
+}
+.hero-wave svg {
+  display: block;
+  width: 100%;
+  height: 64px;
+}
+.hero-wave svg path {
+  fill: #fdf8f4;
+}
+[data-theme="dark"] .hero-wave svg path {
+  fill: #1a1a1a;
+}
+
 .hero.hero-bg-magenta {
   background-image: linear-gradient(135deg, #361a3f 0%, #4a2358 50%, #311b3c 100%);
 }
@@ -158,18 +179,22 @@
   color: rgba(240, 240, 240, 0.75);
 }
 .hero .hero-btn-primary {
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #d63384 0%, #f5a524 100%);
   border: none;
-  color: #1a1a1a;
+  color: #ffffff;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  padding: 0.75rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 6px 24px rgba(214, 51, 132, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
 }
 .hero .hero-btn-primary:hover {
-  background-color: #f0f0f0;
-  color: #1a1a1a;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+  filter: brightness(1.08);
+  color: #ffffff;
+  box-shadow: 0 10px 32px rgba(214, 51, 132, 0.5);
+  transform: translateY(-3px);
 }
 .hero .btn-outline-secondary {
   border-color: var(--cv-border);
@@ -304,6 +329,17 @@
 }
 
 @media (max-width: 991px) {
+  /* On mobile keep only one subtle large circle in the background */
+  .hero-circle--2,
+  .hero-circle--3,
+  .hero-circle--4,
+  .hero-circle--5 {
+    display: none;
+  }
+  .hero-circle--1 {
+    opacity: 0.3;
+  }
+
   .hero-collage {
     width: min(100%, 430px);
     height: 360px;
@@ -498,6 +534,7 @@
 .models,
 .why-benefits,
 .why-vending,
+.home-events,
 .faq-section,
 .contact-cta,
 .about {
@@ -510,6 +547,7 @@
 .models > .container,
 .why-benefits > .container,
 .why-vending > .container,
+.home-events > .container,
 .faq-section > .container,
 .contact-cta > .container,
 .about > .container {
@@ -1168,6 +1206,58 @@
   box-shadow: 0 6px 20px rgba(214, 51, 132, 0.35);
   transform: translateY(-2px);
 }
+
+@media (max-width: 767px) {
+  .why-vending-cta {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+}
+
+/* ==================== HOME EVENTS PREVIEW ==================== */
+.home-events-carousel-wrap {
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+}
+
+.home-events-carousel .carousel-inner {
+  border-radius: 1.25rem;
+}
+
+.home-events-carousel-img {
+  width: 100%;
+  height: 460px;
+  object-fit: cover;
+  display: block;
+  border-radius: 1.25rem;
+}
+
+.home-events-carousel .carousel-indicators [data-bs-target] {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(214, 51, 132, 0.5);
+  border-top: none;
+  border-bottom: none;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+.home-events-carousel .carousel-indicators .active {
+  background: #d63384;
+  width: 24px;
+  border-radius: 4px;
+}
+
+@media (max-width: 767px) {
+  .home-events-carousel-img {
+    height: 260px;
+  }
+}
+
 /* ==================== CONTACT CTA SECTION ==================== */
 .contact-cta {
   background: transparent;

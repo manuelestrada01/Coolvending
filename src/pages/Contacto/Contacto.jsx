@@ -6,7 +6,9 @@ import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import PageHero from "../../shared/layout/PageHero";
 import "./Contacto.css";
 
-const INITIAL = { nombre: "", email: "", telefono: "", mensaje: "", _trap: "" };
+const INITIAL = { nombre: "", email: "", telefono: "", motivo: "", mensaje: "", _trap: "" };
+
+const MOTIVOS = ["Máquinas", "Insumos", "Eventos", "Presupuestos", "Otros"];
 
 export default function Contacto() {
   const [form, setForm] = useState(INITIAL);
@@ -226,6 +228,30 @@ export default function Contacto() {
                                 placeholder="+54 9 11 1234�5678"
                               />
                               {fieldErrors.telefono && <span className="ctc-field-err">{fieldErrors.telefono}</span>}
+                            </div>
+                          </Col>
+
+                          <Col md={12}>
+                            <div className="ctc-field">
+                              <label className="ctc-label" htmlFor="ctc-motivo">Motivo</label>
+                              <div className="ctc-select-wrap">
+                                <select
+                                  id="ctc-motivo"
+                                  className={`ctc-input ctc-select${fieldErrors.motivo ? " ctc-input--error" : ""}`}
+                                  name="motivo"
+                                  value={form.motivo}
+                                  onChange={handleChange}
+                                >
+                                  <option value="" disabled>Seleccioná un motivo...</option>
+                                  {MOTIVOS.map((m) => (
+                                    <option key={m} value={m}>{m}</option>
+                                  ))}
+                                </select>
+                                <svg className="ctc-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                  <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                              </div>
+                              {fieldErrors.motivo && <span className="ctc-field-err">{fieldErrors.motivo}</span>}
                             </div>
                           </Col>
 
