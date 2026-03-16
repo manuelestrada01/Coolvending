@@ -8,11 +8,9 @@ import Footer from "../shared/layout/Footer";
 import WhatsAppFloatButton from "../shared/layout/WhatsAppFloatButton";
 
 import Home from "../pages/Home/Home";
-import Servicios from "../pages/Servicios/Servicios";
-import Galeria from "../pages/Galeria/Galeria";
 import Contacto from "../pages/Contacto/Contacto";
-import Productos from "../pages/Productos/Productos";
 import Equipos from "../pages/Equipos/Equipos";
+import EquipoDetalle from "../pages/Equipos/EquipoDetalle";
 import Insumos from "../pages/Insumos/Insumos";
 import InsumoDetalle from "../pages/Insumos/InsumoDetalle";
 import Presupuestos from "../pages/Presupuestos/Presupuestos";
@@ -39,6 +37,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/equipos" element={<Equipos />} />
+            <Route path="/equipos/:id" element={<EquipoDetalle />} />
             <Route path="/insumos" element={<Insumos />} />
             <Route path="/insumos/:id" element={<InsumoDetalle />} />
             <Route path="/contacto" element={<Contacto />} />

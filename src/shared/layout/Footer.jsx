@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { saveNewsletterEmail } from "../../services/firebase/firestore";
+import { getMaquinas } from "../../services/firebase/maquinas";
 import "./Footer.css";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState(null); // null | "loading" | "success" | "error"
+  const [maquinas, setMaquinas] = useState([]);
+
+  useEffect(() => {
+    getMaquinas().then(setMaquinas).catch(() => {});
+  }, []);
 
   async function handleNewsletter(e) {
     e.preventDefault();
@@ -53,10 +59,9 @@ export default function Footer() {
           <Col lg={2} md={6} className="footer-section footer-right-col">
             <h5 className="footer-title">Modelos</h5>
             <ul className="footer-links">
-              <li><Link to="/productos">CloudMaker Pro</Link></li>
-              <li><Link to="/productos">SugarCube Mini</Link></li>
-              <li><Link to="/productos">Artisan All</Link></li>
-              <li><Link to="/productos">Equipos</Link></li>
+              {maquinas.map((m) => (
+                <li key={m.id}><Link to="/equipos">{m.nombre}</Link></li>
+              ))}
             </ul>
           </Col>
 

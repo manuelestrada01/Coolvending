@@ -374,6 +374,7 @@
   gap: 1.5rem;
   max-width: 960px;
   margin: 0 auto;
+  align-items: start;
 }
 
 .ev-pricing {
@@ -499,6 +500,248 @@
   .ev-features-grid { grid-template-columns: 1fr 1fr; }
   .ev-grid { grid-template-columns: 1fr; }
   .ev-cta-banner { padding: 2.5rem 1.2rem; border-radius: 20px; }
+}
+
+/* =============================================
+   BOOKING PANEL — calendario + horarios
+   ============================================= */
+
+@keyframes ev-booking-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Card selected state — sin hover lift */
+.ev-pricing--booking {
+  border-color: #c2185b !important;
+  box-shadow: 0 8px 40px rgba(194, 24, 91, 0.22) !important;
+}
+.ev-pricing--booking:hover {
+  transform: none !important;
+  box-shadow: 0 8px 40px rgba(194, 24, 91, 0.22) !important;
+}
+
+/* CTA "Elegir fecha" — mismo estilo que el .ev-pricing__cta del CSS original */
+.ev-pricing__cta {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: linear-gradient(135deg, #c2185b, #7b2d8b);
+  color: #fff; font-weight: 700; font-size: 0.85rem;
+  padding: 0.85rem 1.5rem; border-radius: 100px;
+  border: none; cursor: pointer;
+  box-shadow: 0 6px 20px rgba(194, 24, 91, 0.3);
+  transition: transform 0.22s, box-shadow 0.22s;
+  margin-top: auto;
+}
+.ev-pricing__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(194, 24, 91, 0.42);
+  color: #fff;
+}
+
+/* ── Booking view (reemplaza el interior de la card) ── */
+.ev-pricing-booking-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  animation: ev-booking-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  height: 100%;
+}
+
+/* Header compacto: label + duración + precio + botón cerrar */
+.ev-pricing-booking-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(194, 24, 91, 0.12);
+}
+.ev-pricing-booking-info { flex: 1; }
+.ev-pricing-booking-price {
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #c2185b, #7b2d8b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Botón ✕ */
+.ev-pricing-close-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(194, 24, 91, 0.25);
+  background: rgba(194, 24, 91, 0.06);
+  color: #c2185b;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s;
+}
+.ev-pricing-close-btn:hover { background: rgba(194, 24, 91, 0.15); }
+
+/* ── Booking panel wrapper ── */
+.ev-booking-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Calendar ── */
+.ev-cal {
+  background: rgba(194, 24, 91, 0.04);
+  border: 1px solid rgba(194, 24, 91, 0.12);
+  border-radius: 14px;
+  padding: 0.7rem 0.65rem 0.6rem;
+}
+[data-theme="dark"] .ev-cal {
+  background: rgba(194, 24, 91, 0.07);
+  border-color: rgba(194, 24, 91, 0.2);
+}
+
+.ev-cal__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+}
+
+.ev-cal__nav-btn {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(194, 24, 91, 0.08);
+  color: #c2185b;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s;
+  flex-shrink: 0;
+}
+.ev-cal__nav-btn:hover:not(:disabled) { background: rgba(194, 24, 91, 0.18); }
+.ev-cal__nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+.ev-cal__month-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4D4D4D;
+  text-align: center;
+}
+[data-theme="dark"] .ev-cal__month-label { color: #f0e8ff; }
+
+.ev-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.ev-cal__weekday {
+  text-align: center;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #bbb;
+  padding-bottom: 0.3rem;
+}
+
+.ev-cal__day {
+  aspect-ratio: 1;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #4D4D4D;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+}
+[data-theme="dark"] .ev-cal__day { color: #c5bdd8; }
+
+.ev-cal__day:hover:not(:disabled):not(.ev-cal__day--selected) {
+  background: rgba(194, 24, 91, 0.1);
+  color: #c2185b;
+}
+
+.ev-cal__day--empty    { cursor: default; visibility: hidden; }
+.ev-cal__day--disabled { opacity: 0.25; cursor: not-allowed; }
+
+.ev-cal__day--today {
+  font-weight: 700;
+  color: rgba(194, 24, 91, 0.5);
+}
+
+.ev-cal__day--selected {
+  background: linear-gradient(135deg, #c2185b, #7b2d8b) !important;
+  color: #fff !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(194, 24, 91, 0.3);
+}
+
+/* ── Time slots ── */
+.ev-timeslots {
+  animation: ev-booking-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ev-timeslots__label {
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+  margin: 0 0 0.4rem;
+}
+
+/* 3-column grid para que no ocupe tanto vertical */
+.ev-timeslots__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+}
+
+.ev-timeslot {
+  padding: 0.28rem 0;
+  border-radius: 8px;
+  border: 1.5px solid rgba(194, 24, 91, 0.2);
+  background: rgba(194, 24, 91, 0.04);
+  color: #c2185b;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.ev-timeslot:hover {
+  background: rgba(194, 24, 91, 0.12);
+  border-color: rgba(194, 24, 91, 0.4);
+}
+.ev-timeslot--selected {
+  background: linear-gradient(135deg, #c2185b, #7b2d8b) !important;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(194, 24, 91, 0.3);
+}
+
+/* ── Confirm button ── */
+.ev-booking-confirm {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 100%;
+  background: #25d366;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  animation: ev-booking-in 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.32);
+}
+.ev-booking-confirm:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 

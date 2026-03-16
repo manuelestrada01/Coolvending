@@ -1,0 +1,234 @@
+/* ═══════════════════════════════════════════════════
+   EquipoDetalle — Machine Detail Page Styles
+   ═══════════════════════════════════════════════════ */
+
+.eqd-section {
+  background: var(--cv-black);
+  padding: 3.5rem 0 6rem;
+  min-height: 60vh;
+}
+
+/* ─── Back link ───────────────────────────────────── */
+.eqd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cv-text-secondary);
+  text-decoration: none;
+  margin-bottom: 2.5rem;
+  transition: color 0.2s ease;
+}
+
+.eqd-back:hover {
+  color: var(--cv-gold);
+}
+
+.eqd-back--standalone {
+  margin-top: 1rem;
+}
+
+/* ─── Not found ───────────────────────────────────── */
+.eqd-not-found {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.eqd-not-found-text {
+  font-size: 1.1rem;
+  color: var(--cv-text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* ─── Two-column card ─────────────────────────────── */
+.eqd-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  background: var(--cv-card-bg);
+  border: 1px solid var(--cv-border);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .eqd-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Image panel ─────────────────────────────────── */
+.eqd-img-wrap {
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 3rem 2rem;
+}
+
+.eqd-img-orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(60px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.eqd-img {
+  position: relative;
+  z-index: 1;
+  max-height: 320px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.28));
+}
+
+.eqd-img-placeholder {
+  font-size: 6rem;
+  opacity: 0.5;
+}
+
+/* ─── Info panel ──────────────────────────────────── */
+.eqd-info {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .eqd-info {
+    padding: 1.75rem 1.5rem 2rem;
+  }
+}
+
+/* ─── Pills row (badge + category) ───────────────── */
+.eqd-pills-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.eqd-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.3rem 0.9rem;
+  border-radius: 2rem;
+}
+
+.eqd-category {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cv-text-secondary);
+  background: var(--cv-border);
+  padding: 0.3rem 0.85rem;
+  border-radius: 2rem;
+}
+
+/* ─── Name ────────────────────────────────────────── */
+.eqd-name {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  color: var(--cv-text-primary);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* ─── Description ─────────────────────────────────── */
+.eqd-desc {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  color: var(--cv-text-secondary);
+  margin: 0;
+}
+
+/* ─── Divider ─────────────────────────────────────── */
+.eqd-divider {
+  height: 1px;
+  background: var(--cv-border);
+  margin: 0.25rem 0;
+}
+
+/* ─── Tags ────────────────────────────────────────── */
+.eqd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.eqd-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #d63384;
+  background: rgba(214, 51, 132, 0.1);
+  border: 1px solid rgba(214, 51, 132, 0.25);
+  padding: 0.3rem 0.85rem;
+  border-radius: 2rem;
+}
+
+[data-theme="dark"] .eqd-tag {
+  color: #f48abf;
+  background: rgba(244, 138, 191, 0.1);
+  border-color: rgba(244, 138, 191, 0.2);
+}
+
+/* ─── CTA buttons ─────────────────────────────────── */
+.eqd-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.eqd-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.eqd-cta-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.eqd-cta-btn--primary {
+  background: linear-gradient(135deg, #d63384 0%, #f5a524 100%);
+  color: #fff;
+}
+
+.eqd-cta-btn--primary:hover {
+  color: #fff;
+}
+
+.eqd-cta-btn--secondary {
+  background: transparent;
+  color: #25d366;
+  border: 1.5px solid #25d366;
+}
+
+.eqd-cta-btn--secondary:hover {
+  color: #25d366;
+  background: rgba(37, 211, 102, 0.08);
+}

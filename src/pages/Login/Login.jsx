@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Container, Card, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { login, loginWithGoogle } from "../../services/firebase/auth";
@@ -15,16 +15,29 @@ const FIREBASE_ERRORS = {
   "auth/network-request-failed": "Error de red. Verificá tu conexión.",
   "auth/too-many-requests": "Demasiados intentos. Intentá más tarde.",
   "auth/popup-closed-by-user": "Se cerró la ventana de Google. Intentá de nuevo.",
-  "auth/popup-blocked": "El navegador bloqueó la ventana. Permitila e intentá de nuevo.",
+  "auth/popup-blocked": "El navegador bloqueó la ventana emergente. Intentá de nuevo.",
+  "auth/unauthorized-domain": "Este dominio no está autorizado en Firebase. Agregá la IP/dominio en Firebase Console → Authentication → Authorized domains.",
+  "auth/operation-not-supported-in-this-environment": "El navegador no soporta este método de autenticación.",
+  "auth/cancelled-popup-request": "Operación cancelada. Intentá de nuevo.",
 };
 
 export default function Login() {
-  const { user, role, loading } = useAuth();
+  const { user, role, loading, redirectError } = useAuth();
 
   const [showAdmin, setShowAdmin] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [fieldErrors, setFieldErrors] = useState({});
   const [status, setStatus] = useState({ type: null, message: "" });
+
+  // Show error if Google redirect failed (mobile flow)
+  useEffect(() => {
+    if (redirectError) {
+      setStatus({
+        type: "error",
+        message: FIREBASE_ERRORS[redirectError.code] ?? "No se pudo ingresar con Google.",
+      });
+    }
+  }, [redirectError]);
 
   if (!loading && user) {
     return <Navigate to={role === "admin" ? "/admin" : "/"} replace />;
@@ -42,8 +55,8 @@ export default function Login() {
     try {
       await loginWithGoogle();
     } catch (err) {
-      if (import.meta.env.DEV) console.error(err);
-      setStatus({ type: "error", message: FIREBASE_ERRORS[err.code] ?? "No se pudo ingresar con Google." });
+      if (import.meta.env.DEV) console.error("[Google Login] code:", err.code, err);
+      setStatus({ type: "error", message: FIREBASE_ERRORS[err.code] ?? `No se pudo ingresar con Google. (${err.code ?? "error desconocido"})` });
     }
   };
 

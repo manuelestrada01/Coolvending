@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import { getEventos } from "../../services/firebase/eventosService";
@@ -75,6 +75,19 @@ const IconPackage = () => (
 
 /* ─── Data helpers ────────────────────────────────────── */
 const MONTHS_SHORT = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const MONTHS_LONG  = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DAYS_WEEK    = ["L","M","M","J","V","S","D"];
+const TIME_SLOTS   = ["14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00"];
+const WA_NUMBER    = "5492612318259";
+
+function getCalendarDays(year, month) {
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // 0 = Monday
+  const total    = new Date(year, month + 1, 0).getDate();
+  const cells    = [];
+  for (let i = 0; i < firstDow; i++) cells.push(null);
+  for (let d = 1; d <= total; d++) cells.push(d);
+  return cells;
+}
 
 /* ─── Data ───────────────────────────────────────────── */
 const CATEGORIAS = ["Todos", "Cumpleaños", "Corporativo", "Social", "Feria", "Escolar", "Casamiento", "Otro"];
@@ -159,33 +172,61 @@ function FeatureCard({ icon, title, text, className, style }) {
 }
 
 /* ─── Pricing card ───────────────────────────────────── */
-function PricingCard({ opcion, className, style }) {
+function PricingCard({ opcion, isSelected, onSelect, className, style }) {
   return (
-    <div className={`ev-pricing${opcion.destacado ? " ev-pricing--destacado" : ""}${className ? ` ${className}` : ""}`} style={style}>
-      {opcion.destacado && (
-        <div className="ev-pricing__ribbon">Más elegido</div>
-      )}
-      <div className="ev-pricing__header">
-        <div className="ev-pricing__icon">{opcion.icon}</div>
-        <div>
-          <span className="ev-pricing__opcion-label">{opcion.label}</span>
-          <p className="ev-pricing__duracion">{opcion.duracion}</p>
+    <div
+      className={[
+        "ev-pricing",
+        opcion.destacado && !isSelected ? "ev-pricing--destacado" : "",
+        isSelected ? "ev-pricing--booking" : "",
+        className ?? "",
+      ].filter(Boolean).join(" ")}
+      style={style}
+    >
+      {isSelected ? (
+        /* ── BOOKING VIEW: reemplaza el interior de la card ── */
+        <div className="ev-pricing-booking-view">
+          {/* Compact header */}
+          <div className="ev-pricing-booking-header">
+            <div className="ev-pricing-booking-info">
+              <span className="ev-pricing__opcion-label">{opcion.label}</span>
+              <p className="ev-pricing__duracion">
+                {opcion.duracion}
+                <span className="ev-pricing-booking-price">&nbsp;&middot;&nbsp;{opcion.precio}</span>
+              </p>
+            </div>
+            <button className="ev-pricing-close-btn" onClick={onSelect} aria-label="Cerrar">
+              <CloseIcon />
+            </button>
+          </div>
+          {/* Booking panel  */}
+          <BookingPanel plan={opcion} key={opcion.label} />
         </div>
-      </div>
-      <div className="ev-pricing__price">
-        <span className="ev-pricing__amount">{opcion.precio}</span>
-        <span className="ev-pricing__currency">pesos</span>
-      </div>
-      <ul className="ev-pricing__list">
-        {opcion.features.map((f, i) => (
-          <li key={i} className="ev-pricing__item">
-            <CheckIcon /> {f}
-          </li>
-        ))}
-      </ul>
-      <NavLink to="/contacto" className="ev-pricing__cta">
-        Consultar disponibilidad <ArrowRightIcon />
-      </NavLink>
+      ) : (
+        /* ── NORMAL VIEW ── */
+        <>
+          {opcion.destacado && <div className="ev-pricing__ribbon">Más elegido</div>}
+          <div className="ev-pricing__header">
+            <div className="ev-pricing__icon">{opcion.icon}</div>
+            <div>
+              <span className="ev-pricing__opcion-label">{opcion.label}</span>
+              <p className="ev-pricing__duracion">{opcion.duracion}</p>
+            </div>
+          </div>
+          <div className="ev-pricing__price">
+            <span className="ev-pricing__amount">{opcion.precio}</span>
+            <span className="ev-pricing__currency">pesos</span>
+          </div>
+          <ul className="ev-pricing__list">
+            {opcion.features.map((f, i) => (
+              <li key={i} className="ev-pricing__item"><CheckIcon /> {f}</li>
+            ))}
+          </ul>
+          <button className="ev-pricing__cta" onClick={onSelect}>
+            Elegir fecha <ArrowRightIcon />
+          </button>
+        </>
+      )}
     </div>
   );
 }
@@ -195,6 +236,139 @@ const CheckIcon = () => (
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
+
+const CloseIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+
+const ChevronLeft = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+
+const ChevronRight = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>
+);
+
+/* ─── Booking panel (calendar + timeslots) ───────────── */
+function BookingPanel({ plan }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const [viewYear,  setViewYear]  = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [selDate,   setSelDate]   = useState(null);
+  const [selTime,   setSelTime]   = useState(null);
+
+  const cells = getCalendarDays(viewYear, viewMonth);
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
+    else setViewMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
+    else setViewMonth(m => m + 1);
+  };
+
+  const isPrevDisabled = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+
+  const isDisabled = (day) => {
+    if (!day) return true;
+    return new Date(viewYear, viewMonth, day) <= today;
+  };
+  const isSelected = (day) =>
+    !!day && !!selDate &&
+    selDate.getFullYear() === viewYear &&
+    selDate.getMonth()    === viewMonth &&
+    selDate.getDate()     === day;
+  const isToday = (day) =>
+    !!day && new Date(viewYear, viewMonth, day).getTime() === today.getTime();
+
+  const handleDay = (day) => {
+    if (isDisabled(day)) return;
+    setSelDate(new Date(viewYear, viewMonth, day));
+    setSelTime(null);
+  };
+
+  const handleConfirm = () => {
+    const dateStr = selDate.toLocaleDateString("es-AR", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+    });
+    const msg = `¡Hola! Me interesa reservar la ${plan.label} (${plan.duracion}) para el ${dateStr} a las ${selTime}hs. ¿Está disponible?`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+  };
+
+  return (
+    <div className="ev-booking-panel">
+      {/* Calendar */}
+      <div className="ev-cal">
+        <div className="ev-cal__nav">
+          <button
+            className="ev-cal__nav-btn"
+            onClick={prevMonth}
+            disabled={isPrevDisabled}
+            aria-label="Mes anterior"
+          ><ChevronLeft /></button>
+          <span className="ev-cal__month-label">{MONTHS_LONG[viewMonth]} {viewYear}</span>
+          <button className="ev-cal__nav-btn" onClick={nextMonth} aria-label="Mes siguiente"><ChevronRight /></button>
+        </div>
+
+        <div className="ev-cal__grid">
+          {DAYS_WEEK.map((d, i) => (
+            <span key={i} className="ev-cal__weekday">{d}</span>
+          ))}
+          {cells.map((day, i) => (
+            <button
+              key={i}
+              className={[
+                "ev-cal__day",
+                !day               ? "ev-cal__day--empty"    : "",
+                isDisabled(day)    ? "ev-cal__day--disabled"  : "",
+                isToday(day)       ? "ev-cal__day--today"     : "",
+                isSelected(day)    ? "ev-cal__day--selected"  : "",
+              ].filter(Boolean).join(" ")}
+              onClick={() => handleDay(day)}
+              disabled={!day || isDisabled(day)}
+              tabIndex={!day || isDisabled(day) ? -1 : 0}
+              aria-label={day ? `${day} de ${MONTHS_LONG[viewMonth]}` : undefined}
+            >
+              {day ?? ""}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Time slots */}
+      {selDate && (
+        <div className="ev-timeslots">
+          <p className="ev-timeslots__label">Horario de inicio</p>
+          <div className="ev-timeslots__grid">
+            {TIME_SLOTS.map(t => (
+              <button
+                key={t}
+                className={`ev-timeslot${selTime === t ? " ev-timeslot--selected" : ""}`}
+                onClick={() => setSelTime(t)}
+              >{t}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Confirm */}
+      {selDate && selTime && (
+        <button className="ev-booking-confirm" onClick={handleConfirm}>
+          <WhatsAppIcon /> Reservar por WhatsApp
+        </button>
+      )}
+    </div>
+  );
+}
 
 /* ─── Event card (Firestore data) ──────────────── */
 function EventCard({ evento, className, style }) {
@@ -259,6 +433,8 @@ export default function Eventos() {
       .catch(console.error)
       .finally(() => setLoadingEventos(false));
   }, []);
+  const [selectedPlanIdx, setSelectedPlanIdx] = useState(null);
+
   const [statsRef, statsVisible]     = useScrollReveal();
   const [howRef, howVisible]         = useScrollReveal();
   const [pricingRef, pricingVisible] = useScrollReveal();
@@ -310,9 +486,9 @@ export default function Eventos() {
             <h2 className="ev-section-header__title">¿Cómo funciona?</h2>
             <span className="ev-section-header__line" />
           </div>
-          <div
+          <Row
             ref={howRef}
-            className={`ev-features-grid reveal-section${howVisible ? " visible" : ""}`}
+            className={`g-4 reveal-section${howVisible ? " visible" : ""}`}
           >
             {[
               {
@@ -336,9 +512,15 @@ export default function Eventos() {
                 text: "Según el tamaño de tu evento podés sumar una segunda máquina y llegar a ~80 porciones por hora con doble espectáculo.",
               },
             ].map((f, i) => (
-              <FeatureCard key={f.title} icon={f.icon} title={f.title} text={f.text} className="reveal-card" style={{ transitionDelay: `${i * 0.12}s` }} />
+              <Col key={f.title} xs={12} sm={6} lg={3}>
+                <div className="why-card reveal-card" style={{ transitionDelay: `${i * 0.12}s` }}>
+                  <div className="why-card-icon">{f.icon}</div>
+                  <h4 className="why-card-title">{f.title}</h4>
+                  <p className="why-card-text">{f.text}</p>
+                </div>
+              </Col>
             ))}
-          </div>
+          </Row>
         </Container>
       </section>
 
@@ -438,7 +620,14 @@ export default function Eventos() {
                 destacado: false,
               },
             ].map((op, i) => (
-              <PricingCard key={op.label} opcion={op} className="reveal-card" style={{ transitionDelay: `${i * 0.14}s` }} />
+              <PricingCard
+                key={op.label}
+                opcion={op}
+                isSelected={selectedPlanIdx === i}
+                onSelect={() => setSelectedPlanIdx(selectedPlanIdx === i ? null : i)}
+                className="reveal-card"
+                style={{ transitionDelay: `${i * 0.14}s` }}
+              />
             ))}
           </div>
           <p className="ev-pricing__note">

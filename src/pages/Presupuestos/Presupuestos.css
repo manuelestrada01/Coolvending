@@ -629,3 +629,29 @@
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  /* Stack nav buttons vertically so 3-button rows (step 2) don't overflow */
+  .pres-nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .pres-nav > .pres-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* pres-nav-right (Saltear + Continuar) stays as a row */
+  .pres-nav-right {
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  /* Continuar expands to fill remaining space */
+  .pres-nav-right .pres-btn--primary {
+    flex: 1;
+    justify-content: center;
+  }
+}

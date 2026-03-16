@@ -5,6 +5,7 @@ import {
   updateProfile,
   GoogleAuthProvider,
   signInWithPopup,
+  getRedirectResult,
 } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./firebase";
@@ -46,11 +47,8 @@ export async function login(email, password) {
   return user;
 }
 
-export async function loginWithGoogle() {
-  const result = await signInWithPopup(auth, googleProvider);
-  const user = result.user;
 
-  // Only create the Firestore doc on first login — never overwrite existing role
+async function ensureFirestoreUser(user) {
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
   if (!snap.exists()) {
@@ -58,10 +56,29 @@ export async function loginWithGoogle() {
       nombre: user.displayName ?? "",
       email: user.email?.toLowerCase() ?? "",
       role: "usuario",
+      puedeVerPrecios: false,
       creadoEn: serverTimestamp(),
     });
   }
-  return user;
+}
+
+export async function loginWithGoogle() {
+  // signInWithPopup on mobile Chrome opens a Custom Chrome Tab (not a real popup),
+  // so it is not blocked by the browser. The original error was auth/unauthorized-domain
+  // (now fixed). The redirect flow (signInWithRedirect) is unreliable over plain HTTP
+  // on Android because indexedDB persistence is restricted, so we always use popup.
+  const result = await signInWithPopup(auth, googleProvider);
+  await ensureFirestoreUser(result.user);
+  return result.user;
+}
+
+// Kept as a no-op safety net in case a browser ended up with a pending redirect state
+export async function handleGoogleRedirectResult() {
+  const result = await getRedirectResult(auth);
+  if (result?.user) {
+    await ensureFirestoreUser(result.user);
+  }
+  return result;
 }
 
 export function logout() {

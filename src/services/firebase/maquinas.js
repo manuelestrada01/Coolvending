@@ -3,6 +3,7 @@ import {
   addDoc,
   getDocs,
   doc,
+  getDoc,
   updateDoc,
   deleteDoc,
   serverTimestamp,
@@ -18,6 +19,12 @@ export async function getMaquinas() {
   const q = query(collection(db, "maquinas"), orderBy("creadoEn", "desc"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function getMaquinaById(id) {
+  const snap = await getDoc(doc(db, "maquinas", id));
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() };
 }
 
 const ALLOWED_COLLECTIONS = new Set(["maquinas", "contactos", "newsletter", "eventos", "insumos"]);

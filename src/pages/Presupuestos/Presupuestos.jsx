@@ -6,7 +6,7 @@ import { savePresupuesto } from "../../services/firebase/firestore";
 import PageHero from "../../shared/layout/PageHero";
 import "./Presupuestos.css";
 
-const WHATSAPP_NUMBER = "5491112345678";
+const WHATSAPP_NUMBER = "5492612318259";
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+\d\s\-().]{6,20}$/;
 
@@ -321,7 +321,7 @@ export default function Presupuestos() {
                         Saltear
                       </button>
                       <button className="pres-btn pres-btn--primary" onClick={() => setStep(3)}>
-                        {selectedInsumos.size > 0 ? `Continuar (${selectedInsumos.size} seleccionado${selectedInsumos.size > 1 ? "s" : ""})` : "Continuar"}
+                        Continuar
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                           <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                         </svg>

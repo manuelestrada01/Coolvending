@@ -56,6 +56,17 @@ body[data-theme="dark"] {
   color: #f0f0f0 !important;
 }
 
+[data-theme="dark"] .cv-login-btn {
+  border: none !important;
+  color: #f0f0f0 !important;
+}
+
+[data-theme="dark"] .cv-login-btn:hover {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: var(--cv-gold) !important;
+}
+
 /* Theme toggle button */
 .cv-theme-toggle {
   display: inline-flex;
@@ -151,21 +162,19 @@ body[data-theme="dark"] {
 }
 
 .cv-login-btn {
-  background-color: var(--cv-gold) !important;
-  border: 1px solid var(--cv-gold) !important;
-  color: #ffffff !important;
-  font-weight: 700;
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--cv-text-primary) !important;
+  font-weight: 600;
   padding: 8px 16px;
   border-radius: 10px;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 .cv-login-btn:hover {
-  background-color: #b02a6f !important;
-  border-color: #b02a6f !important;
-  color: #ffffff !important;
-  box-shadow: 0 5px 14px rgba(214, 51, 132, 0.24);
-  transform: translateY(-1px);
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: var(--cv-gold) !important;
 }
 
 /* User dropdown in Navbar */

@@ -84,13 +84,16 @@ export default function Insumos() {
                     className={`ins-card ins-card-reveal${gridVisible ? " ins-reveal--visible" : ""}`}
                     style={{ "--accent": tagStyle.color, animationDelay: gridVisible ? `${i * 0.08}s` : "0s" }}
                   >
-                    {item.imagenURL ? (
-                      <img src={item.imagenURL} alt={item.nombre} className="ins-card-img" loading="lazy" />
-                    ) : (
-                      <div className="ins-card-img ins-card-img--placeholder">
-                        <span aria-hidden="true">{tagStyle.icon}</span>
-                      </div>
-                    )}
+                    <div className="ins-card-img-wrap">
+                      {item.imagenURL ? (
+                        <img src={item.imagenURL} alt={item.nombre} className="ins-card-img" loading="lazy" />
+                      ) : (
+                        <div className="ins-card-img ins-card-img--placeholder">
+                          <span aria-hidden="true" style={{ fontSize: "4rem" }}>{tagStyle.icon}</span>
+                          <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: tagStyle.color, opacity: 0.7 }}>{item.maquina}</span>
+                        </div>
+                      )}
+                    </div>
                     <div className="ins-card-overlay">
                       <span
                         className="ins-card-tag"
