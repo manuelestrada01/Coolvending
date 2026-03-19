@@ -37,22 +37,20 @@ export async function countCollection(colName) {
   return snap.data().count;
 }
 
-async function uploadImage(imageFile) {
+async function uploadImage(imageFile, folder = "maquinas") {
   const imgError = validateImageFile(imageFile);
   if (imgError) throw new Error(imgError);
 
-  // Sanitize filename: strip any path traversal / special chars
   const safeName = imageFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const path = `maquinas/${Date.now()}-${safeName}`;
+  const path = `${folder}/${Date.now()}-${safeName}`;
   const storageRef = ref(storage, path);
   await uploadBytes(storageRef, imageFile);
   const url = await getDownloadURL(storageRef);
-  return { imagenURL: url, imagenPath: path };
+  return { url, path };
 }
 
 async function removeImage(imagenPath) {
   if (!imagenPath) return;
-  // Prevent path traversal: only allow paths inside the maquinas/ prefix
   if (!imagenPath.startsWith("maquinas/")) return;
   try {
     await deleteObject(ref(storage, imagenPath));
@@ -73,44 +71,68 @@ function sanitizeMaquinaPayload(data) {
   };
 }
 
-export async function addMaquina(data, imageFile) {
+export async function addMaquina(data, imageFile, galeriaFiles = []) {
   const { ok, errors } = validateMaquinaForm(data);
   if (!ok) throw new Error("Datos de máquina inválidos: " + JSON.stringify(errors));
 
   let imagenURL = "";
   let imagenPath = "";
   if (imageFile) {
-    ({ imagenURL, imagenPath } = await uploadImage(imageFile));
+    const result = await uploadImage(imageFile);
+    imagenURL = result.url;
+    imagenPath = result.path;
+  }
+
+  const galeria = [];
+  for (const file of galeriaFiles.slice(0, 5)) {
+    const result = await uploadImage(file);
+    galeria.push({ url: result.url, path: result.path });
   }
 
   return addDoc(collection(db, "maquinas"), {
     ...sanitizeMaquinaPayload(data),
     imagenURL,
     imagenPath,
+    galeria,
     creadoEn: serverTimestamp(),
     actualizadoEn: serverTimestamp(),
   });
 }
 
-export async function updateMaquina(id, data, imageFile) {
+export async function updateMaquina(id, data, imageFile, galeriaFiles = [], galeriaExistente = []) {
   const { ok, errors } = validateMaquinaForm(data);
   if (!ok) throw new Error("Datos de máquina inválidos: " + JSON.stringify(errors));
 
   let { imagenURL, imagenPath } = data;
   if (imageFile) {
     await removeImage(imagenPath);
-    ({ imagenURL, imagenPath } = await uploadImage(imageFile));
+    const result = await uploadImage(imageFile);
+    imagenURL = result.url;
+    imagenPath = result.path;
+  }
+
+  // Upload new galeria files and merge with existing ones kept
+  const galeria = [...galeriaExistente];
+  for (const file of galeriaFiles.slice(0, Math.max(0, 5 - galeria.length))) {
+    const result = await uploadImage(file);
+    galeria.push({ url: result.url, path: result.path });
   }
 
   return updateDoc(doc(db, "maquinas", id), {
     ...sanitizeMaquinaPayload(data),
     imagenURL,
     imagenPath,
+    galeria,
     actualizadoEn: serverTimestamp(),
   });
 }
 
-export async function deleteMaquina(id, imagenPath) {
+export async function deleteMaquina(id, imagenPath, galeria = []) {
   await removeImage(imagenPath);
+  for (const item of galeria) {
+    await removeImage(item.path);
+  }
   return deleteDoc(doc(db, "maquinas", id));
 }
+
+export { removeImage };

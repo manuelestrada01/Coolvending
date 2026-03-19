@@ -13,6 +13,7 @@ import {
   addMaquina,
   updateMaquina,
   deleteMaquina,
+  removeImage,
 } from "../../services/firebase/maquinas";
 import { validateMaquinaForm, validateImageFile } from "../../shared/utils/validators";
 import AlgodonM  from "../../app/assets/images/models/algodonM.png";
@@ -43,6 +44,8 @@ const SEED_MACHINES = [
   { image: PororoM,   nombre: "Artisan Event",   badge: "Edición especial",   tags: ["Alta producción", "LED", "Eventos"],           categoria: "Algodón de azúcar", descripcion: "Diseñada para eventos de alta producción con iluminación LED integrada." },
 ];
 
+const MAX_GALERIA = 5;
+
 export default function MaquinasAdmin() {
   const [maquinas, setMaquinas] = useState([]);
   const [fetching, setFetching] = useState(true);
@@ -50,17 +53,27 @@ export default function MaquinasAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+
+  // Portada
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+
+  // Galería — archivos nuevos a subir
+  const [galeriaFiles, setGaleriaFiles] = useState([]);
+  const [galeriaPreviews, setGaleriaPreviews] = useState([]); // {url, isNew, path?}
+  // Galería existente que se mantiene (al editar)
+  const [galeriaExistente, setGaleriaExistente] = useState([]); // [{url, path}]
+
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const [deleting, setDeleting] = useState(null); // id being deleted
+  const [deleting, setDeleting] = useState(null);
   const [tagInput, setTagInput] = useState("");
   const [seeding, setSeeding] = useState(false);
 
   const fileInputRef = useRef(null);
+  const galeriaInputRef = useRef(null);
 
   const loadMaquinas = async () => {
     setFetching(true);
@@ -78,11 +91,19 @@ export default function MaquinasAdmin() {
   }, []);
 
   // ── Modal helpers ──────────────────────────────────────────────
+  const resetGaleria = () => {
+    galeriaPreviews.forEach((p) => { if (p.isNew) URL.revokeObjectURL(p.url); });
+    setGaleriaFiles([]);
+    setGaleriaPreviews([]);
+    setGaleriaExistente([]);
+  };
+
   const openAdd = () => {
     setEditing(null);
     setForm(EMPTY_FORM);
     setImageFile(null);
     setImagePreview(null);
+    resetGaleria();
     setFormError(null);
     setFieldErrors({});
     setTagInput("");
@@ -102,6 +123,11 @@ export default function MaquinasAdmin() {
     });
     setImageFile(null);
     setImagePreview(null);
+    // Load existing gallery
+    const existente = Array.isArray(m.galeria) ? m.galeria : [];
+    setGaleriaExistente(existente);
+    setGaleriaFiles([]);
+    setGaleriaPreviews(existente.map((g) => ({ url: g.url, isNew: false, path: g.path })));
     setFormError(null);
     setFieldErrors({});
     setTagInput("");
@@ -110,6 +136,7 @@ export default function MaquinasAdmin() {
 
   const closeModal = () => {
     if (imagePreview) URL.revokeObjectURL(imagePreview);
+    resetGaleria();
     setShowModal(false);
     setEditing(null);
     setImageFile(null);
@@ -138,12 +165,49 @@ export default function MaquinasAdmin() {
     setImagePreview(URL.createObjectURL(file));
   };
 
+  const totalGaleria = () => galeriaExistente.length + galeriaFiles.length;
+
+  const handleGaleriaChange = (e) => {
+    const files = Array.from(e.target.files);
+    const slots = MAX_GALERIA - totalGaleria();
+    if (slots <= 0) {
+      setFormError(`Ya alcanzaste el máximo de ${MAX_GALERIA} fotos en la galería.`);
+      e.target.value = "";
+      return;
+    }
+    const toAdd = files.slice(0, slots);
+    const errors = toAdd.map(validateImageFile).filter(Boolean);
+    if (errors.length) {
+      setFormError(errors[0]);
+      e.target.value = "";
+      return;
+    }
+    const newPreviews = toAdd.map((f) => ({ url: URL.createObjectURL(f), isNew: true }));
+    setGaleriaFiles((prev) => [...prev, ...toAdd]);
+    setGaleriaPreviews((prev) => [...prev, ...newPreviews]);
+    e.target.value = "";
+    setFormError(null);
+  };
+
+  const removeGaleriaItem = async (index) => {
+    const item = galeriaPreviews[index];
+    if (item.isNew) {
+      // Remove from pending files
+      URL.revokeObjectURL(item.url);
+      const newIdx = galeriaPreviews.slice(0, index).filter((p) => p.isNew).length;
+      setGaleriaFiles((prev) => prev.filter((_, i) => i !== newIdx));
+    } else {
+      // Mark existing for removal (will be excluded from galeriaExistente)
+      setGaleriaExistente((prev) => prev.filter((g) => g.url !== item.url));
+      // Optionally delete from storage immediately (best UX: defer to save)
+    }
+    setGaleriaPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = { ...form };
-
-    // Client-side validation (mirrors service layer)
     const { ok, errors } = validateMaquinaForm(data);
     if (!ok) {
       setFieldErrors(errors);
@@ -153,11 +217,17 @@ export default function MaquinasAdmin() {
     setSubmitting(true);
     setFormError(null);
     try {
-
       if (editing) {
-        await updateMaquina(editing.id, data, imageFile);
+        // Delete removed existing gallery items from storage
+        const removedItems = (editing.galeria ?? []).filter(
+          (g) => !galeriaExistente.some((e) => e.url === g.url)
+        );
+        for (const item of removedItems) {
+          await removeImage(item.path);
+        }
+        await updateMaquina(editing.id, data, imageFile, galeriaFiles, galeriaExistente);
       } else {
-        await addMaquina(data, imageFile);
+        await addMaquina(data, imageFile, galeriaFiles);
       }
 
       closeModal();
@@ -175,7 +245,7 @@ export default function MaquinasAdmin() {
     if (!window.confirm(`¿Eliminar "${m.nombre}"? Esta acción no se puede deshacer.`)) return;
     setDeleting(m.id);
     try {
-      await deleteMaquina(m.id, m.imagenPath);
+      await deleteMaquina(m.id, m.imagenPath, m.galeria ?? []);
       await loadMaquinas();
     } catch (err) {
       console.error(err);
@@ -212,6 +282,7 @@ export default function MaquinasAdmin() {
 
   // ── Render ─────────────────────────────────────────────────────
   const currentPreview = imagePreview || (editing?.imagenURL ?? form.imagenURL);
+  const galeriaSlots = MAX_GALERIA - totalGaleria();
 
   return (
     <>
@@ -258,6 +329,18 @@ export default function MaquinasAdmin() {
                 ) : (
                   <div className="admin-maquina-placeholder">📷</div>
                 )}
+                {Array.isArray(m.galeria) && m.galeria.length > 0 && (
+                  <div style={{ display: "flex", gap: 4, padding: "6px 8px", background: "var(--cv-card-bg)", flexWrap: "wrap" }}>
+                    {m.galeria.map((g, i) => (
+                      <img
+                        key={i}
+                        src={g.url}
+                        alt={`galería ${i + 1}`}
+                        style={{ width: 36, height: 36, objectFit: "cover", borderRadius: 4, border: "1px solid var(--cv-border)" }}
+                      />
+                    ))}
+                  </div>
+                )}
                 <div className="admin-maquina-body">
                   <p className="admin-maquina-name">{m.nombre}</p>
                   <span className="admin-maquina-badge">{m.categoria}</span>
@@ -277,11 +360,7 @@ export default function MaquinasAdmin() {
                       disabled={deleting === m.id}
                       onClick={() => handleDelete(m)}
                     >
-                      {deleting === m.id ? (
-                        <Spinner size="sm" />
-                      ) : (
-                        "🗑 Eliminar"
-                      )}
+                      {deleting === m.id ? <Spinner size="sm" /> : "🗑 Eliminar"}
                     </Button>
                   </div>
                 </div>
@@ -441,9 +520,10 @@ export default function MaquinasAdmin() {
               )}
             </Form.Group>
 
-            <Form.Group className="mb-2">
+            {/* ── Foto portada ── */}
+            <Form.Group className="mb-3">
               <Form.Label>
-                Imagen{" "}
+                Foto portada{" "}
                 {editing && (
                   <small style={{ color: "var(--cv-text-secondary)", fontWeight: 400 }}>
                     (dejá vacío para mantener la actual)
@@ -454,7 +534,7 @@ export default function MaquinasAdmin() {
               {currentPreview && (
                 <img
                   src={currentPreview}
-                  alt="Vista previa"
+                  alt="Vista previa portada"
                   className="admin-image-preview d-block"
                 />
               )}
@@ -467,6 +547,79 @@ export default function MaquinasAdmin() {
                 disabled={submitting}
                 className="admin-input"
               />
+            </Form.Group>
+
+            {/* ── Galería (hasta 5 fotos) ── */}
+            <Form.Group className="mb-2">
+              <Form.Label>
+                Galería{" "}
+                <small style={{ color: "var(--cv-text-secondary)", fontWeight: 400 }}>
+                  ({totalGaleria()}/{MAX_GALERIA} fotos · se muestran en la página del modelo)
+                </small>
+              </Form.Label>
+
+              {galeriaPreviews.length > 0 && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                  {galeriaPreviews.map((p, i) => (
+                    <div key={i} style={{ position: "relative" }}>
+                      <img
+                        src={p.url}
+                        alt={`galería ${i + 1}`}
+                        style={{
+                          width: 72,
+                          height: 72,
+                          objectFit: "cover",
+                          borderRadius: 6,
+                          border: "2px solid var(--cv-border)",
+                        }}
+                      />
+                      <button
+                        type="button"
+                        disabled={submitting}
+                        onClick={() => removeGaleriaItem(i)}
+                        style={{
+                          position: "absolute",
+                          top: -6,
+                          right: -6,
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          border: "none",
+                          background: "#d63384",
+                          color: "#fff",
+                          fontSize: 12,
+                          lineHeight: "20px",
+                          cursor: "pointer",
+                          padding: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        aria-label="Quitar foto"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {galeriaSlots > 0 && (
+                <>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    ref={galeriaInputRef}
+                    onChange={handleGaleriaChange}
+                    disabled={submitting}
+                    className="admin-input"
+                  />
+                  <Form.Text style={{ color: "var(--cv-text-secondary)" }}>
+                    Podés seleccionar hasta {galeriaSlots} foto{galeriaSlots !== 1 ? "s" : ""} más
+                  </Form.Text>
+                </>
+              )}
             </Form.Group>
           </Modal.Body>
 

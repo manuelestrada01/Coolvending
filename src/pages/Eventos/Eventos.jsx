@@ -451,7 +451,7 @@ export default function Eventos() {
       {/* ── Hero ── */}
       <PageHero
         title={<>Nuestros <span className="ph-gradient-text">Eventos</span></>}
-        description={<>Llevamos la magia del algodón de azúcar portátil a cada celebración. Servicio <strong>por hora</strong>, operario calificado incluido y una nube dulce cada 1 min 30 seg — porque cada invitado merece su momento mágico.</>}
+        description={<>Llevamos la magia del algodón de azúcar portátil y american popcorn a cada celebración. Servicio <strong>por hora</strong>, operario calificado incluido y una nube dulce cada 1 min 30 seg — porque cada invitado merece su momento mágico.</>}
       >
         <NavLink to="/contacto" className="ev-hero__cta">
           Reservar para tu Evento <ArrowRightIcon />
@@ -466,8 +466,8 @@ export default function Eventos() {
         >
           {[
             { value: "+500", label: "Eventos realizados" },
-            { value: "~40/hr", label: "Algodones por máquina" },
-            { value: "1 ó 2", label: "Máquinas disponibles" },
+            { value: "~235/hr", label: "Algodones por máquina" },
+            { value: "1 ó 2", label: "Máquinas disponibles por evento" },
             { value: "Incluido", label: "Operario calificado" },
           ].map((s, i) => (
             <div className="ev-stat reveal-card" key={s.label} style={{ transitionDelay: `${i * 0.1}s` }}>
@@ -504,12 +504,12 @@ export default function Eventos() {
               {
                 icon: <IconZap />,
                 title: "1 algodón cada 1 min 30 s",
-                text: "Producción continua de ~40 porciones por hora por máquina. Ningún invitado se queda sin su nube de azúcar.",
+                text: "Producción continua de ~35 porciones por hora por máquina. Ningún invitado se queda sin su nube de azúcar.",
               },
               {
                 icon: <IconLayers />,
                 title: "1 ó 2 máquinas",
-                text: "Según el tamaño de tu evento podés sumar una segunda máquina y llegar a ~80 porciones por hora con doble espectáculo.",
+                text: "Según el tamaño de tu evento podés sumar una segunda máquina y llegar a ~70 porciones por hora con doble espectáculo.",
               },
             ].map((f, i) => (
               <Col key={f.title} xs={12} sm={6} lg={3}>

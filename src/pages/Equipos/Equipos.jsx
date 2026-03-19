@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Container, Spinner } from "react-bootstrap";
 import PageHero from "../../shared/layout/PageHero";
 import { getMaquinas } from "../../services/firebase/maquinas";
@@ -42,6 +42,7 @@ function MachineRow({ machine, index, palette, badgeStyle }) {
 
   return (
     <div
+      id={machine.id}
       ref={wrapRef}
       className={[
         "eq-row",
@@ -57,7 +58,6 @@ function MachineRow({ machine, index, palette, badgeStyle }) {
         {/* ── Image panel ── */}
         <div className="eq-row-img-panel" style={{ background: palette.gradient }}>
           <div className="eq-row-orb" style={{ background: palette.orb }} />
-          <span className="eq-row-num-bg" aria-hidden="true">{num}</span>
           {machine.imagenURL ? (
             <img src={machine.imagenURL} alt={machine.nombre} className="eq-row-img" />
           ) : (
@@ -106,6 +106,7 @@ export default function Equipos() {
   const [loading, setLoading]               = useState(true);
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [ctaRef, ctaVisible]                = useScrollReveal({ rootMargin: "0px 0px -40px 0px" });
+  const { hash } = useLocation();
 
   useEffect(() => {
     getMaquinas()
@@ -113,6 +114,16 @@ export default function Equipos() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  // Scroll to machine when arriving from Home via hash
+  useEffect(() => {
+    if (!hash || loading) return;
+    const id = hash.slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+    }
+  }, [hash, loading]);
 
   const categories = ["Todos", ...new Set(machines.map((m) => m.categoria).filter(Boolean))];
   const filtered   = activeCategory === "Todos"

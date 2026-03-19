@@ -1,4 +1,4 @@
-import { collection, addDoc, serverTimestamp, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, where, getDocs, doc, runTransaction } from "firebase/firestore";
 import { db } from "./firebase";
 import { validateContactForm, validateNewsletterEmail } from "../../shared/utils/validators";
 
@@ -45,13 +45,30 @@ export async function saveNewsletterEmail(email) {
   });
 }
 
+async function generarNumeroPresupuesto() {
+  const counterRef = doc(db, "counters", "presupuestos");
+  const year = new Date().getFullYear().toString().slice(-2);
+  const num = await runTransaction(db, async (tx) => {
+    const snap = await tx.get(counterRef);
+    const next = snap.exists() ? snap.data().ultimo + 1 : 1;
+    tx.set(counterRef, { ultimo: next, year });
+    return next;
+  });
+  return `${String(num).padStart(3, "0")}/${year}`;
+}
+
 export async function savePresupuesto(data) {
-  return addDoc(collection(db, "presupuestos"), {
+  const numero = await generarNumeroPresupuesto();
+  const docRef = await addDoc(collection(db, "presupuestos"), {
     nombre: data.nombre,
     email: data.email || "",
+    telefono: data.telefono || "",
     mensaje: data.mensaje || "",
     maquinas: data.maquinas,
+    insumos: data.insumos || [],
     canal: data.canal,
+    numero,
     creadoEn: serverTimestamp(),
   });
+  return { docId: docRef.id, numero };
 }

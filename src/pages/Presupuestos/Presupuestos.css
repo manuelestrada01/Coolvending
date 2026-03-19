@@ -594,6 +594,14 @@
   margin-bottom: 2rem;
 }
 
+.pres-success-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  margin-bottom: 0.75rem;
+}
+
 .pres-success-back {
   background: transparent;
   border: 1.5px solid var(--cv-border);

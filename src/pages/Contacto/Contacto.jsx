@@ -82,7 +82,7 @@ export default function Contacto() {
                     </svg>
                   </a>
 
-                  <a href="mailto:hola@coolvending.com.ar" className="ctc-contact-card ctc-card-reveal" style={{ animationDelay: sidebarVisible ? "0.22s" : "0s" }}>
+                  <a href="mailto:info@coolvending.com.ar" className="ctc-contact-card ctc-card-reveal" style={{ animationDelay: sidebarVisible ? "0.22s" : "0s" }}>
                     <div className="ctc-contact-icon">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" />
@@ -90,7 +90,7 @@ export default function Contacto() {
                     </div>
                     <div>
                       <p className="ctc-contact-label">Email</p>
-                      <p className="ctc-contact-value">hola@coolvending.com.ar</p>
+                      <p className="ctc-contact-value">info@coolvending.com.ar</p>
                     </div>
                     <svg className="ctc-contact-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
@@ -105,7 +105,7 @@ export default function Contacto() {
                     </div>
                     <div>
                       <p className="ctc-contact-label">Zona de cobertura</p>
-                      <p className="ctc-contact-value">Buenos Aires y Mendoza</p>
+                      <p className="ctc-contact-value">Todo el pais</p>
                     </div>
                   </div>
 

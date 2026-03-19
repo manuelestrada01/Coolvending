@@ -3,6 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import { getMaquinas } from "../../services/firebase/maquinas";
 import { getInsumos } from "../../services/firebase/insumosService";
 import { savePresupuesto } from "../../services/firebase/firestore";
+import { generarYSubirPdf, enviarEmailPresupuesto } from "../../services/pdf/presupuestoPdf";
 import PageHero from "../../shared/layout/PageHero";
 import "./Presupuestos.css";
 
@@ -39,6 +40,7 @@ export default function Presupuestos() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   useEffect(() => {
     getMaquinas()
@@ -107,26 +109,54 @@ export default function Presupuestos() {
     const selectedMaquinas = maquinas.filter((m) => selected.has(m.id)).map((m) => m.nombre);
     const selectedInsumoNames = insumos.filter((ins) => selectedInsumos.has(ins.id)).map((ins) => ins.nombre);
 
-    if (canal === "whatsapp") {
-      const list = selectedMaquinas.join(", ");
-      const insumoList = selectedInsumoNames.length ? ` También me interesan los insumos: ${selectedInsumoNames.join(", ")}.` : "";
-      const extra = form.mensaje.trim() ? ` ${form.mensaje.trim()}` : "";
-      const text = `Hola! Me interesa recibir un presupuesto para: ${list}.${insumoList} Mi nombre es ${form.nombre.trim()}.${extra}`;
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
-      setDone(true);
-      return;
-    }
-
     setSubmitting(true);
     try {
-      await savePresupuesto({
+      // 1. Guardar en Firestore y obtener número de solicitud
+      const { docId, numero } = await savePresupuesto({
         nombre: form.nombre.trim(),
         email: form.email.trim().toLowerCase(),
+        telefono: form.telefono.trim(),
         mensaje: form.mensaje.trim(),
         maquinas: selectedMaquinas,
         insumos: selectedInsumoNames,
         canal,
       });
+
+      // 2. Generar PDF y subir a Storage
+      const fecha = new Date().toLocaleDateString("es-AR");
+      let url = null;
+      try {
+        url = await generarYSubirPdf(
+          { nombre: form.nombre.trim(), maquinas: selectedMaquinas, insumos: selectedInsumoNames, mensaje: form.mensaje.trim(), numero, fecha },
+          docId
+        );
+        setPdfUrl(url);
+      } catch (pdfErr) {
+        if (import.meta.env.DEV) console.warn("PDF upload failed:", pdfErr);
+      }
+
+      // 3. Enviar por canal elegido
+      if (canal === "whatsapp") {
+        const list = selectedMaquinas.join(", ");
+        const insumoList = selectedInsumoNames.length ? ` Insumos: ${selectedInsumoNames.join(", ")}.` : "";
+        const extra = form.mensaje.trim() ? `\n${form.mensaje.trim()}` : "";
+        const text = `Hola! Me interesa recibir un presupuesto para: ${list}.${insumoList}\nMi nombre es ${form.nombre.trim()}.${extra}`;
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+      } else if (canal === "email" && url) {
+        try {
+          await enviarEmailPresupuesto({
+            nombre: form.nombre.trim(),
+            email: form.email.trim().toLowerCase(),
+            pdf_url: url,
+            numero,
+            maquinas: selectedMaquinas.join(", "),
+            insumos: selectedInsumoNames.join(", ") || "Ninguno",
+          });
+        } catch (emailErr) {
+          if (import.meta.env.DEV) console.warn("Email send failed:", emailErr);
+        }
+      }
+
       setDone(true);
     } catch (err) {
       if (import.meta.env.DEV) console.error(err);
@@ -144,6 +174,7 @@ export default function Presupuestos() {
     setForm({ nombre: "", email: "", telefono: "", mensaje: "" });
     setFieldErrors({});
     setDone(false);
+    setPdfUrl(null);
   }
 
   const selectedNames = maquinas.filter((m) => selected.has(m.id)).map((m) => m.nombre);
@@ -176,6 +207,21 @@ export default function Presupuestos() {
                   ? "Completá la conversación en WhatsApp y te responderemos a la brevedad."
                   : "Recibimos tu solicitud. Te contactaremos en menos de 24 hs."}
               </p>
+              {pdfUrl && (
+                <a
+                  href={pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="pres-btn pres-btn--primary pres-success-pdf"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Descargar PDF
+                </a>
+              )}
               <button className="pres-success-back" onClick={reset}>Hacer otra consulta</button>
             </div>
           ) : (

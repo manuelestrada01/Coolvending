@@ -263,6 +263,10 @@
   animation: fadeIn 3s ease-out;
 }
 
+.hero-subtitle-animated {
+  animation: fadeIn 3s ease-out 0.2s both;
+}
+
 .hero-text-animated {
   animation: fadeIn 3s ease-out 0.3s both;
 }
@@ -808,12 +812,11 @@
 
 .product-card {
   background: #ffffff;
-  border: 1px solid var(--cv-border);
+  border: none;
   border-radius: 1.25rem;
   overflow: hidden;
   transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
-              box-shadow 0.35s ease,
-              border-color 0.35s ease;
+              box-shadow 0.35s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -835,7 +838,6 @@
 
 .product-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(214, 51, 132, 0.25);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.13),
               0 4px 16px rgba(214, 51, 132, 0.12);
 }
@@ -975,6 +977,42 @@
 }
 .product-card:hover .product-card-cta {
   gap: 0.55rem;
+}
+
+/* ── Card "ver todos" ── */
+.product-card--all .product-card-all-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  border-bottom: 1px solid var(--cv-border);
+  background: #e8dff0;
+}
+
+.product-card-all-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-card-all-thumb:nth-child(1) { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
+.product-card-all-thumb:nth-child(2) { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+.product-card-all-thumb:nth-child(3) { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); }
+.product-card-all-thumb:nth-child(4) { background: linear-gradient(135deg, #96fbc4 0%, #f9f586 100%); }
+
+.product-card-all-thumb img {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.product-card--all:hover .product-card-all-thumb img {
+  transform: scale(1.1) translateY(-4px);
 }
 
 /* ==================== WHY BENEFITS CARDS ==================== */

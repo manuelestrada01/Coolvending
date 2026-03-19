@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Container, Spinner } from "react-bootstrap";
 import { getMaquinaById } from "../../services/firebase/maquinas";
@@ -48,6 +48,43 @@ export default function EquipoDetalle() {
     ? (BADGE_STYLES[badgeKey] ?? { bg: "rgba(255,255,255,0.65)", color: "#1a1a1a" })
     : null;
 
+  // Build photo array: portada first, then galería
+  const photos = maquina
+    ? [
+        ...(maquina.imagenURL ? [{ url: maquina.imagenURL }] : []),
+        ...(Array.isArray(maquina.galeria) ? maquina.galeria : []),
+      ]
+    : [];
+  const [photoIdx, setPhotoIdx] = useState(0);
+
+  // Preload all photos so navigation is instant
+  useEffect(() => {
+    photos.forEach(({ url }) => {
+      const img = new Image();
+      img.src = url;
+    });
+  }, [photos.length]);
+
+  const prevPhoto = useCallback(() => setPhotoIdx((i) => (i - 1 + photos.length) % photos.length), [photos.length]);
+  const nextPhoto = useCallback(() => setPhotoIdx((i) => (i + 1) % photos.length), [photos.length]);
+
+  // Lightbox
+  const [lightbox, setLightbox] = useState(false);
+
+  const openLightbox = () => setLightbox(true);
+  const closeLightbox = () => setLightbox(false);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") prevPhoto();
+      if (e.key === "ArrowRight") nextPhoto();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, prevPhoto, nextPhoto]);
+
   return (
     <>
       <PageHero
@@ -83,12 +120,41 @@ export default function EquipoDetalle() {
           {!loading && maquina && (
             <div className="eqd-card">
               {/* Image panel */}
-              <div className="eqd-img-wrap" style={{ background: palette.gradient }}>
-                <div className="eqd-img-orb" style={{ background: palette.orb }} />
-                {maquina.imagenURL ? (
-                  <img src={maquina.imagenURL} alt={maquina.nombre} className="eqd-img" />
+              <div className="eqd-img-wrap">
+
+                {photos.length > 0 ? (
+                  photos.map(({ url }, i) => (
+                    <img
+                      key={url}
+                      src={url}
+                      alt={`${maquina.nombre} — foto ${i + 1}`}
+                      className={`eqd-img${i === photoIdx ? " eqd-img--active" : " eqd-img--hidden"}`}
+                      onClick={openLightbox}
+                    />
+                  ))
                 ) : (
                   <div className="eqd-img-placeholder">🤖</div>
+                )}
+
+                {photos.length > 1 && (
+                  <>
+                    <button className="eqd-carousel-btn eqd-carousel-btn--prev" onClick={prevPhoto} aria-label="Foto anterior">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    </button>
+                    <button className="eqd-carousel-btn eqd-carousel-btn--next" onClick={nextPhoto} aria-label="Foto siguiente">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                    <div className="eqd-carousel-dots">
+                      {photos.map((_, i) => (
+                        <button
+                          key={i}
+                          className={`eqd-carousel-dot${i === photoIdx ? " eqd-carousel-dot--active" : ""}`}
+                          onClick={() => setPhotoIdx(i)}
+                          aria-label={`Foto ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
@@ -154,6 +220,51 @@ export default function EquipoDetalle() {
           )}
         </Container>
       </section>
+
+      {/* ── Lightbox ── */}
+      {lightbox && photos.length > 0 && (
+        <div className="eqd-lightbox" onClick={closeLightbox}>
+          <button className="eqd-lightbox-close" onClick={closeLightbox} aria-label="Cerrar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+
+          <img
+            src={photos[photoIdx].url}
+            alt={`${maquina.nombre} — foto ${photoIdx + 1}`}
+            className="eqd-lightbox-img"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {photos.length > 1 && (
+            <>
+              <button
+                className="eqd-carousel-btn eqd-carousel-btn--prev eqd-lightbox-nav"
+                onClick={(e) => { e.stopPropagation(); prevPhoto(); }}
+                aria-label="Foto anterior"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button
+                className="eqd-carousel-btn eqd-carousel-btn--next eqd-lightbox-nav"
+                onClick={(e) => { e.stopPropagation(); nextPhoto(); }}
+                aria-label="Foto siguiente"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div className="eqd-carousel-dots eqd-lightbox-dots">
+                {photos.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`eqd-carousel-dot${i === photoIdx ? " eqd-carousel-dot--active" : ""}`}
+                    onClick={(e) => { e.stopPropagation(); setPhotoIdx(i); }}
+                    aria-label={`Foto ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

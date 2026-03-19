@@ -132,7 +132,7 @@ export default function Home() {
  { icon: "location", title: "Ubicación estratégica", text: "Shoppings, ferias, parques, eventos — cualquier lugar con tráfico es una oportunidad de venta." },
  { icon: "cost", title: "Bajo costo operativo", text: "Sin local, sin empleados fijos. Solo insumos y mantenimiento mínimo para maximizar tu margen." },
  { icon: "roi", title: "ROI en meses, no años", text: "Nuestros clientes recuperan la inversión en un promedio de 4 a 6 meses según el punto de venta." },
- { icon: "demand", title: "Producto con alta demanda", text: "El algodón de azúcar atrae a todas las edades. Es una experiencia, no solo un producto." },
+ { icon: "demand", title: "Producto con alta demanda", text: "Ofrecemos productos novedosos. Es una experiencia, no solo un producto." },
  { icon: "support", title: "Soporte incluido", text: "Acompañamos cada paso: instalación, capacitación y soporte técnico remoto cuando lo necesitás." },
  ];
 
@@ -151,15 +151,12 @@ export default function Home() {
  <Container>
  <Row className="align-items-center">
  <Col md={5}>
- <span className="hero-eyebrow">✦ Tecnología de vanguardia</span>
-<h1 className="hero-title-animated">Reinventamos la <span className="hero-title-gradient">magia</span> del algodón de azúcar</h1>
+ <h1 className="hero-title-animated">Reinventamos la <span className="hero-title-gradient">magia</span> de las maquinas vending</h1>
+<p className="hero-subtitle-animated">Máquinas de última tecnología para emprendedores y eventos. Tecnología de punta para un negocio sostenible y rentable.</p>
 
  <div className="d-flex gap-3 align-items-center flex-wrap hero-buttons-animated">
  <Button as={NavLink} to="/presupuestos" variant="light" className="hero-btn-primary">Solicitar presupuesto</Button>
  <NavLink to="/equipos" className="hero-btn-ghost">Ver modelos →</NavLink>
- </div>
- <div className="hero-stat">
-   <span>★ +50 máquinas instaladas</span>
  </div>
  </Col>
  <Col md={7} className="text-center hero-media-col">
@@ -224,14 +221,13 @@ export default function Home() {
  </p>
  ) : (
    <Row className="g-4 justify-content-center">
-     {machines.slice(0, 6).map((m, idx) => {
+     {machines.map((m, idx) => {
        const palette = GRADIENTS[idx % GRADIENTS.length];
        return (
          <Col xs={11} sm={8} md={5} lg={4} key={m.id}>
-           <Link to={`/equipos/${m.id}`} className="product-card-link">
+           <Link to={`/equipos#${m.id}`} className="product-card-link">
              <div className="product-card reveal-card" style={{ transitionDelay: `${idx * 0.12}s`, "--pc-gradient": palette.gradient, "--pc-orb": palette.orb }}>
-               <div className="product-card-topline" style={{ background: palette.gradient }} />
-               <div className="product-card-img-wrap" style={{ background: palette.gradient }}>
+                <div className="product-card-img-wrap" style={{ background: palette.gradient }}>
                  <div className="product-card-orb" style={{ background: palette.orb }} />
                  {m.imagenURL && <img src={m.imagenURL} alt={m.nombre} className="product-card-img" />}
                  {m.badge && <span className="product-card-badge">{m.badge}</span>}
@@ -245,6 +241,32 @@ export default function Home() {
          </Col>
        );
      })}
+
+     {/* ── Card "Ver todos" ── */}
+     {machines.length > 0 && (
+       <Col xs={11} sm={8} md={5} lg={4}>
+         <Link to="/equipos" className="product-card-link">
+           <div className="product-card product-card--all reveal-card" style={{ transitionDelay: `${machines.length * 0.12}s` }}>
+              <div className="product-card-all-grid">
+               {machines.slice(0, 4).map((m, i) => (
+                 <div key={m.id} className="product-card-all-thumb">
+                   {m.imagenURL
+                     ? <img src={m.imagenURL} alt={m.nombre} />
+                     : <span>🤖</span>
+                   }
+                 </div>
+               ))}
+             </div>
+             <div className="product-card-body">
+               <h3 className="product-card-title">Ver catálogo completo</h3>
+               <span className="product-card-cta" style={{ color: "#d63384" }}>
+                 Ver todos los modelos <span aria-hidden="true">→</span>
+               </span>
+             </div>
+           </div>
+         </Link>
+       </Col>
+     )}
    </Row>
  )}
  </Container>
@@ -339,7 +361,7 @@ export default function Home() {
  <div className="models-header mb-2 text-center"><span className="models-label">EVENTOS</span></div>
  <h2 className="models-title">Tu evento, una experiencia única y dulce</h2>
  <p className="why-vending-intro">
- Llevamos nuestra máquina directamente a tu evento. Casamientos, cumpleaños, corporativos y ferias — el espectáculo de ver el algodón crearse en el momento convierte cualquier reunión en algo memorable.
+ Llevamos nuestras máquinas directamente a tu evento. Casamientos, cumpleaños, corporativos y ferias — el espectáculo de ver el algodón crearse en el momento convierte cualquier reunión en algo memorable.
  </p>
  <ul className="why-vending-list">
  {[
