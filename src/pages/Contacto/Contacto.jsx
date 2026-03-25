@@ -63,7 +63,7 @@ export default function Contacto() {
                 <p className="ctc-eyebrow">Nuestros canales</p>
                 <h2 className="ctc-sidebar-title">Estamos<br />disponibles</h2>
                 <p className="ctc-sidebar-desc">
-                  Elegí el canal que más te guste. Atendemos en todos ellos.
+                   Atendemos en todos.
                 </p>
 
                 <div className="ctc-contacts">

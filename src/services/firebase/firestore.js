@@ -10,19 +10,24 @@ export async function saveContactMessage(data) {
   if (!ok) throw new Error("Datos de contacto inválidos: " + JSON.stringify(errors));
 
   // Basic rate-limit: query by email only (no composite index needed), filter window locally
-  const snap = await getDocs(
-    query(
-      collection(db, "contactos"),
-      where("email", "==", data.email.trim().toLowerCase())
-    )
-  );
-  const windowStart = Date.now() - WINDOW_MS;
-  const recent = snap.docs.filter((d) => {
-    const ts = d.data().creadoEn;
-    return ts && ts.toMillis() >= windowStart;
-  });
-  if (recent.length >= CONTACT_LIMIT) {
-    throw new Error("rate_limit");
+  try {
+    const snap = await getDocs(
+      query(
+        collection(db, "contactos"),
+        where("email", "==", data.email.trim().toLowerCase())
+      )
+    );
+    const windowStart = Date.now() - WINDOW_MS;
+    const recent = snap.docs.filter((d) => {
+      const ts = d.data().creadoEn;
+      return ts && ts.toMillis() >= windowStart;
+    });
+    if (recent.length >= CONTACT_LIMIT) {
+      throw new Error("rate_limit");
+    }
+  } catch (err) {
+    if (err.message === "rate_limit") throw err;
+    // Si no hay permisos para leer, ignoramos el rate limit y continuamos
   }
 
   // Solo persiste campos conocidos — nunca spread de input sin filtrar

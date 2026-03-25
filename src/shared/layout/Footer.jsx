@@ -94,20 +94,18 @@ export default function Footer() {
         </Row>
 
         <Row className="footer-bottom">
-          <Col md={6} className="footer-copyright">
+          <Col md={4} className="footer-copyright">
             <p>© {currentYear} Coolvending. Todos los derechos reservados.</p>
           </Col>
-          <Col md={6} className="footer-links-bottom">
-            <Link to="/">Privacidad</Link>
-            <Link to="/">Términos</Link>
-            <Link to="/">Cookies</Link>
-          </Col>
-        </Row>
-        <Row className="footer-powered">
-          <Col className="text-center">
+          <Col md={4} className="text-center">
             <p className="footer-powered-text">
               Powered by <span className="footer-powered-name">Manuel Estrada</span>
             </p>
+          </Col>
+          <Col md={4} className="footer-links-bottom">
+            <Link to="/">Privacidad</Link>
+            <Link to="/">Términos</Link>
+            <Link to="/">Cookies</Link>
           </Col>
         </Row>
       </Container>

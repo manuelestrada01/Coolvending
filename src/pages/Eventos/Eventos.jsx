@@ -534,7 +534,9 @@ export default function Eventos() {
           </div>
 
           <div className="ev-filters">
-            {CATEGORIAS.map((cat) => (
+            {CATEGORIAS.filter(cat =>
+              cat === "Todos" || eventos.some(e => e.categoria === cat)
+            ).map((cat) => (
               <button
                 key={cat}
                 className={`ev-chip${filtro === cat ? " ev-chip--active" : ""}`}

@@ -21,6 +21,13 @@ html, body {
   color: #4D4D4D;
   transition: background-color 0.3s ease, color 0.3s ease;
   padding-top: 64px;
+  scrollbar-gutter: stable;
+}
+
+*, *::before, *::after {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
 }
 
 /* Dark mode overrides */
