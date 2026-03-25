@@ -67,6 +67,16 @@ export default function SiteNavbar() {
           <span className="visually-hidden">CoolVending</span>
         </Navbar.Brand>
 
+        {/* Theme toggle — mobile only, next to hamburger */}
+        <button
+          className="cv-theme-toggle d-flex d-lg-none ms-auto me-2"
+          onClick={toggleTheme}
+          aria-label="Cambiar tema"
+          title={isDark ? "Modo claro" : "Modo oscuro"}
+        >
+          {isDark ? <SunIcon /> : <MoonIcon />}
+        </button>
+
         <Navbar.Toggle
           aria-controls="main-navbar"
           className={`cv-hamburger${expanded ? " cv-hamburger--open" : ""}`}
@@ -100,8 +110,9 @@ export default function SiteNavbar() {
 
           {/* Derecha */}
           <div className="d-flex gap-3 align-items-center cv-navbar-actions">
+            {/* Theme toggle — desktop only */}
             <button
-              className="cv-theme-toggle"
+              className="cv-theme-toggle d-none d-lg-flex"
               onClick={toggleTheme}
               aria-label="Cambiar tema"
               title={isDark ? "Modo claro" : "Modo oscuro"}

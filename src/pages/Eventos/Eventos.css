@@ -496,7 +496,7 @@
 }
 @media (max-width: 576px) {
   .ev-hero { padding: 5rem 1rem 4rem; min-height: 70vh; }
-  .ev-stats__inner { gap: 1.5rem; }
+  .ev-stats__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .ev-features-grid { grid-template-columns: 1fr 1fr; }
   .ev-grid { grid-template-columns: 1fr; }
   .ev-cta-banner { padding: 2.5rem 1.2rem; border-radius: 20px; }
@@ -1529,7 +1529,7 @@
 
 @media (max-width: 576px) {
   .ev-hero { padding: 4rem 1rem 3rem; min-height: 50vh; }
-  .ev-stats__inner { gap: 1.5rem; }
+  .ev-stats__inner { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
   .ev-features-grid { grid-template-columns: 1fr 1fr; }
   .ev-plans-grid { grid-template-columns: 1fr; }
   .ev-grid { grid-template-columns: 1fr; }

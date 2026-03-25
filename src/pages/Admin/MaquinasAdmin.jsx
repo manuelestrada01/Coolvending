@@ -45,6 +45,7 @@ const SEED_MACHINES = [
 ];
 
 const MAX_GALERIA = 5;
+const MAX_DETALLE = 8;
 
 export default function MaquinasAdmin() {
   const [maquinas, setMaquinas] = useState([]);
@@ -72,8 +73,14 @@ export default function MaquinasAdmin() {
   const [tagInput, setTagInput] = useState("");
   const [seeding, setSeeding] = useState(false);
 
+  // Detalle images
+  const [detalleFiles, setDetalleFiles] = useState([]);
+  const [detallePreviews, setDetallePreviews] = useState([]);
+  const [detalleExistente, setDetalleExistente] = useState([]);
+
   const fileInputRef = useRef(null);
   const galeriaInputRef = useRef(null);
+  const detalleInputRef = useRef(null);
 
   const loadMaquinas = async () => {
     setFetching(true);
@@ -98,12 +105,56 @@ export default function MaquinasAdmin() {
     setGaleriaExistente([]);
   };
 
+  const resetDetalle = () => {
+    detallePreviews.forEach((p) => { if (p.isNew) URL.revokeObjectURL(p.url); });
+    setDetalleFiles([]);
+    setDetallePreviews([]);
+    setDetalleExistente([]);
+  };
+
+  const totalDetalle = () => detalleExistente.length + detalleFiles.length;
+
+  const handleDetalleChange = (e) => {
+    const files = Array.from(e.target.files);
+    const slots = MAX_DETALLE - totalDetalle();
+    if (slots <= 0) {
+      setFormError(`Ya alcanzaste el máximo de ${MAX_DETALLE} imágenes de detalle.`);
+      e.target.value = "";
+      return;
+    }
+    const toAdd = files.slice(0, slots);
+    const errors = toAdd.map(validateImageFile).filter(Boolean);
+    if (errors.length) {
+      setFormError(errors[0]);
+      e.target.value = "";
+      return;
+    }
+    const newPreviews = toAdd.map((f) => ({ url: URL.createObjectURL(f), isNew: true }));
+    setDetalleFiles((prev) => [...prev, ...toAdd]);
+    setDetallePreviews((prev) => [...prev, ...newPreviews]);
+    e.target.value = "";
+    setFormError(null);
+  };
+
+  const removeDetalleItem = (index) => {
+    const item = detallePreviews[index];
+    if (item.isNew) {
+      URL.revokeObjectURL(item.url);
+      const newIdx = detallePreviews.slice(0, index).filter((p) => p.isNew).length;
+      setDetalleFiles((prev) => prev.filter((_, i) => i !== newIdx));
+    } else {
+      setDetalleExistente((prev) => prev.filter((g) => g.url !== item.url));
+    }
+    setDetallePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const openAdd = () => {
     setEditing(null);
     setForm(EMPTY_FORM);
     setImageFile(null);
     setImagePreview(null);
     resetGaleria();
+    resetDetalle();
     setFormError(null);
     setFieldErrors({});
     setTagInput("");
@@ -128,6 +179,11 @@ export default function MaquinasAdmin() {
     setGaleriaExistente(existente);
     setGaleriaFiles([]);
     setGaleriaPreviews(existente.map((g) => ({ url: g.url, isNew: false, path: g.path })));
+    // Load existing detalle images
+    const existenteDetalle = Array.isArray(m.detalleImagenes) ? m.detalleImagenes : [];
+    setDetalleExistente(existenteDetalle);
+    setDetalleFiles([]);
+    setDetallePreviews(existenteDetalle.map((g) => ({ url: g.url, isNew: false, path: g.path })));
     setFormError(null);
     setFieldErrors({});
     setTagInput("");
@@ -137,6 +193,7 @@ export default function MaquinasAdmin() {
   const closeModal = () => {
     if (imagePreview) URL.revokeObjectURL(imagePreview);
     resetGaleria();
+    resetDetalle();
     setShowModal(false);
     setEditing(null);
     setImageFile(null);
@@ -225,9 +282,16 @@ export default function MaquinasAdmin() {
         for (const item of removedItems) {
           await removeImage(item.path);
         }
-        await updateMaquina(editing.id, data, imageFile, galeriaFiles, galeriaExistente);
+        // Delete removed detalle items from storage
+        const removedDetalle = (editing.detalleImagenes ?? []).filter(
+          (g) => !detalleExistente.some((e) => e.url === g.url)
+        );
+        for (const item of removedDetalle) {
+          await removeImage(item.path);
+        }
+        await updateMaquina(editing.id, data, imageFile, galeriaFiles, galeriaExistente, detalleFiles, detalleExistente);
       } else {
-        await addMaquina(data, imageFile, galeriaFiles);
+        await addMaquina(data, imageFile, galeriaFiles, detalleFiles);
       }
 
       closeModal();
@@ -245,7 +309,7 @@ export default function MaquinasAdmin() {
     if (!window.confirm(`¿Eliminar "${m.nombre}"? Esta acción no se puede deshacer.`)) return;
     setDeleting(m.id);
     try {
-      await deleteMaquina(m.id, m.imagenPath, m.galeria ?? []);
+      await deleteMaquina(m.id, m.imagenPath, m.galeria ?? [], m.detalleImagenes ?? []);
       await loadMaquinas();
     } catch (err) {
       console.error(err);
@@ -283,6 +347,7 @@ export default function MaquinasAdmin() {
   // ── Render ─────────────────────────────────────────────────────
   const currentPreview = imagePreview || (editing?.imagenURL ?? form.imagenURL);
   const galeriaSlots = MAX_GALERIA - totalGaleria();
+  const detalleSlots = MAX_DETALLE - totalDetalle();
 
   return (
     <>
@@ -617,6 +682,78 @@ export default function MaquinasAdmin() {
                   />
                   <Form.Text style={{ color: "var(--cv-text-secondary)" }}>
                     Podés seleccionar hasta {galeriaSlots} foto{galeriaSlots !== 1 ? "s" : ""} más
+                  </Form.Text>
+                </>
+              )}
+            </Form.Group>
+            {/* ── Imágenes de detalle (hasta 8) ── */}
+            <Form.Group className="mb-2">
+              <Form.Label>
+                Imágenes de detalle{" "}
+                <small style={{ color: "var(--cv-text-secondary)", fontWeight: 400 }}>
+                  ({totalDetalle()}/{MAX_DETALLE} · aparecen en la sección "Más detalle" del modelo)
+                </small>
+              </Form.Label>
+
+              {detallePreviews.length > 0 && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                  {detallePreviews.map((p, i) => (
+                    <div key={i} style={{ position: "relative" }}>
+                      <img
+                        src={p.url}
+                        alt={`detalle ${i + 1}`}
+                        style={{
+                          width: 72,
+                          height: 72,
+                          objectFit: "cover",
+                          borderRadius: 6,
+                          border: "2px solid var(--cv-border)",
+                        }}
+                      />
+                      <button
+                        type="button"
+                        disabled={submitting}
+                        onClick={() => removeDetalleItem(i)}
+                        style={{
+                          position: "absolute",
+                          top: -6,
+                          right: -6,
+                          width: 20,
+                          height: 20,
+                          borderRadius: "50%",
+                          border: "none",
+                          background: "#d63384",
+                          color: "#fff",
+                          fontSize: 12,
+                          lineHeight: "20px",
+                          cursor: "pointer",
+                          padding: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        aria-label="Quitar imagen de detalle"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {detalleSlots > 0 && (
+                <>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    ref={detalleInputRef}
+                    onChange={handleDetalleChange}
+                    disabled={submitting}
+                    className="admin-input"
+                  />
+                  <Form.Text style={{ color: "var(--cv-text-secondary)" }}>
+                    Podés seleccionar hasta {detalleSlots} imagen{detalleSlots !== 1 ? "es" : ""} más
                   </Form.Text>
                 </>
               )}

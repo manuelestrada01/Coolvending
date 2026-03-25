@@ -77,8 +77,8 @@ const IconPackage = () => (
 const MONTHS_SHORT = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
 const MONTHS_LONG  = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS_WEEK    = ["L","M","M","J","V","S","D"];
-const TIME_SLOTS   = ["14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00"];
-const WA_NUMBER    = "5492612318259";
+const TIME_SLOTS   = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00"];
+const WA_NUMBER    = "5492615661521";
 
 function getCalendarDays(year, month) {
   const firstDow = (new Date(year, month, 1).getDay() + 6) % 7; // 0 = Monday
@@ -465,8 +465,8 @@ export default function Eventos() {
           className={`ev-stats__inner reveal-section${statsVisible ? " visible" : ""}`}
         >
           {[
-            { value: "+500", label: "Eventos realizados" },
-            { value: "~235/hr", label: "Algodones por máquina" },
+            { value: "+100", label: "Eventos realizados" },
+            { value: "~35/hr", label: "Algodones por máquina" },
             { value: "1 ó 2", label: "Máquinas disponibles por evento" },
             { value: "Incluido", label: "Operario calificado" },
           ].map((s, i) => (
@@ -652,7 +652,7 @@ export default function Eventos() {
                 Solicitar Presupuesto <ArrowRightIcon />
               </NavLink>
               <a
-                href="https://wa.me/5492612318259"
+                href="https://wa.me/5492615661521"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ev-cta-banner__btn-outline"

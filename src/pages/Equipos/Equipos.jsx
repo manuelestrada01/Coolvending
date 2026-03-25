@@ -204,7 +204,7 @@ export default function Equipos() {
                 <p className="eq-cta-sub">Hablemos y te asesoramos para encontrar la solución ideal para tu negocio.</p>
               </div>
               <a
-                href="https://wa.me/5492612318259"
+                href="https://wa.me/5492615661521"
                 target="_blank"
                 rel="noreferrer"
                 className="eq-cta-btn"

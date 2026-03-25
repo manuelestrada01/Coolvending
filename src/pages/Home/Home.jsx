@@ -3,16 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 
 import { Container, Row, Col, Button, Carousel, Spinner } from "react-bootstrap";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
-import HeroImage from "../../app/assets/images/hero.svg";
 import Algodon from "../../app/assets/images/algodon.png";
 import AlgodonVideo from "../../app/assets/images/algodon.mp4";
 import AlgodonPororoVideo from "../../app/assets/images/algodon-pororo.mp4";
 import Logo from "../../app/assets/images/logo/logo.png";
-import LogoAlt from "../../app/assets/images/logo/logo2.png";
 import EventoImg1 from "../../app/assets/images/eventos/evento1.png";
 import EventoImg2 from "../../app/assets/images/eventos/evento2.png";
 import EventoAlgodon from "../../app/assets/images/eventos/algodoncito.png";
 import { getMaquinas } from "../../services/firebase/maquinas";
+import Marca1 from "../../app/assets/images/logo/Marcas/image-removebg-preview.png";
+import Marca2 from "../../app/assets/images/logo/Marcas/image-removebg-preview (1).png";
+import Marca4 from "../../app/assets/images/logo/Marcas/image-removebg-preview (3).png";
+import MarcaTCN from "../../app/assets/images/logo/Marcas/TCN.PNG";
 import "./Home.css";
 
 
@@ -106,26 +108,15 @@ export default function Home() {
  const [modelsRef, modelsVisible] = useScrollReveal();
  const [benefitsRef, benefitsVisible] = useScrollReveal();
  const [vendingRef, vendingVisible] = useScrollReveal();
- const [faqRef, faqVisible] = useScrollReveal();
  const [ctaRef, ctaVisible] = useScrollReveal({ rootMargin: "0px 0px -40px 0px" });
  const [aboutRef, aboutVisible] = useScrollReveal();
  const [eventsRef, eventsVisible] = useScrollReveal();
 
  const heroFrames = [
  { key: "main", type: "video", src: AlgodonVideo, poster: Algodon, alt: "Máquina en acción", frameClass: "hero-frame-main" },
- { key: "top", type: "image", src: LogoAlt, alt: "Marca Coolvending", frameClass: "hero-frame-top" },
  { key: "bottom", type: "video", src: AlgodonPororoVideo, poster: Logo, alt: "Experiencia del producto", frameClass: "hero-frame-bottom" },
  ];
 
- const faqItems = [
- { question: "What is a Sweet Robo vending machine?", answer: "A Sweet Robo vending machine is a smart robotics vending machine that does not just sell products, it creates them live. Unlike traditional vending machines that only dispense pre-packed items, Sweet Robo machines use advanced robotic systems to produce fresh treats on demand, such as cotton candy, ice cream, popcorn, balloons, and other interactive products." },
- { question: "Is a robotics-based vending machine business viable?", answer: "Yes. Robotics vending combines automation, low staffing needs, and high visual impact. With strategic placement in high-traffic areas, many operators achieve a strong return by offering products with attractive margins and quick production cycles." },
- { question: "What kind of businesses can use Sweet Robo's smart vending machines?", answer: "They are ideal for malls, entertainment centers, cinemas, amusement parks, family venues, event agencies, fairs, hotels, airports, and entrepreneurs looking to add a modern, unattended point of sale." },
- { question: "How much maintenance does a robotic vending machine require?", answer: "Maintenance is generally low and predictable. Most models include easy cleaning routines, consumable refills, and periodic preventive checks. With proper use, day-to-day operation remains simple and efficient." },
- { question: "How do I start a vending machine business?", answer: "Start with a clear business plan: choose your machine type, define your target audience, evaluate locations, estimate costs and margins, and secure supplier and technical support. Then launch, monitor results, and optimize placement and pricing." },
- { question: "How do I find a location for my vending machine business?", answer: "Prioritize high foot traffic, family audiences, and dwell-time spaces. Negotiate with venue owners, validate electrical and space requirements, and test performance using a pilot period before scaling to additional points." },
- { question: "Can Sweet Robo help me start a smart vending machine business?", answer: "Absolutely. Coolvending can guide you from machine selection to setup, onboarding, and operational best practices, so you can launch faster and run your vending business with confidence." },
- ];
 
  const benefitItems = [
  { icon: "income", title: "Ingresos pasivos reales", text: "La máquina genera ventas las 24hs, los 7 días de la semana, sin necesidad de personal dedicado." },
@@ -136,7 +127,6 @@ export default function Home() {
  { icon: "support", title: "Soporte incluido", text: "Acompañamos cada paso: instalación, capacitación y soporte técnico remoto cuando lo necesitás." },
  ];
 
- const [openFaq, setOpenFaq] = useState(0);
 
  return (
  <>
@@ -178,7 +168,6 @@ export default function Home() {
  </Row>
  </Container>
 
- <div className="hero-scroll-hint" aria-hidden="true"><span /></div>
 {/* Wave bottom divider */}
  <div className="hero-wave" aria-hidden="true">
    <svg viewBox="0 0 1440 64" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
@@ -186,6 +175,19 @@ export default function Home() {
    </svg>
  </div>
  </section>
+
+ <section className="brands-strip">
+  <Container>
+    <div className="brands-strip-inner">
+      <span className="brands-strip-label">TRABAJAMOS CON</span>
+      <div className="brands-logos">
+        {[Marca1, Marca2, Marca4, MarcaTCN].map((src, i) => (
+          <img key={i} src={src} alt={`Marca ${i + 1}`} className="brands-logo" />
+        ))}
+      </div>
+    </div>
+  </Container>
+</section>
 
  <div className="home-canvas">
  <div className="home-deco" aria-hidden="true">
@@ -248,7 +250,7 @@ export default function Home() {
          <Link to="/equipos" className="product-card-link">
            <div className="product-card product-card--all reveal-card" style={{ transitionDelay: `${machines.length * 0.12}s` }}>
               <div className="product-card-all-grid">
-               {machines.slice(0, 4).map((m, i) => (
+               {machines.slice(0, 4).map((m) => (
                  <div key={m.id} className="product-card-all-thumb">
                    {m.imagenURL
                      ? <img src={m.imagenURL} alt={m.nombre} />
@@ -380,7 +382,7 @@ export default function Home() {
  </li>
  ))}
  </ul>
- <Link to="/eventos" className="why-vending-cta mt-3 d-inline-block text-decoration-none">
+ <Link to="/eventos" className="why-vending-cta mt-3 text-decoration-none">
  Ver todos los eventos →
  </Link>
  </Col>
@@ -407,8 +409,8 @@ export default function Home() {
  <section ref={ctaRef} className={`contact-cta py-5 reveal-section${ctaVisible ? " visible" : ""}`}>
  <Container>
  <div className="contact-cta-header text-center mb-5 models-header">
+ <span className="models-label">CONTACTO</span>
  <h2 className="contact-cta-title models-title">¿Querés <span className="contact-cta-highlight">saber más?</span></h2>
- <div className="contact-cta-divider"><span>▼</span></div>
  </div>
  <Row className="g-4 justify-content-center">
  <Col md={4}>
@@ -426,7 +428,7 @@ export default function Home() {
  <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
  </div>
  <p className="contact-cta-text">Contáctanos instantáneamente por WhatsApp y resolvemos tus dudas.</p>
- <a href="https://wa.me/5492612318259" target="_blank" rel="noreferrer" className="contact-cta-btn">Chatear ahora</a>
+ <a href="https://wa.me/5492615661521" target="_blank" rel="noreferrer" className="contact-cta-btn">Chatear ahora</a>
  </div>
  </Col>
  <Col md={4}>
@@ -444,9 +446,9 @@ export default function Home() {
 
  <section ref={aboutRef} className={`about py-5 reveal-section${aboutVisible ? " visible" : ""}`}>
  <Container>
- <Row className="align-items-center">
- <Col md={6} className="reveal-col--left">
- <div className="about-label">NUESTRA VISIÓN</div>
+ <Row className="align-items-center justify-content-center">
+ <Col md={8} className="reveal-col--left">
+ <div className="mb-2 text-center"><span className="models-label">NUESTRA VISIÓN</span></div>
  <h2 className="about-title">Innovación en cada algodón</h2>
  <p className="about-text">
  En Coolvending creemos en la magia del entretenimiento sano y rentable. Nos esforzamos por
@@ -468,53 +470,10 @@ export default function Home() {
  </div>
  </div>
  </Col>
- <Col md={6} className="text-center reveal-col--right">
- <img src={HeroImage} alt="Visión Coolvending" className="img-fluid about-img" />
- </Col>
  </Row>
  </Container>
  </section>
 
- <section ref={faqRef} className={`faq-section py-5 reveal-section${faqVisible ? " visible" : ""}`}>
- <Container>
- <div className="models-header text-center mb-5">
- <span className="models-label">FAQ</span>
- <h2 className="models-title">Preguntas Frecuentes</h2>
- <p className="models-subtitle">Todo lo que necesitás saber para empezar en el negocio vending</p>
- </div>
- <div className="faq-list" role="list">
- {faqItems.map((item, index) => {
- const isOpen = openFaq === index;
- return (
- <article key={item.question} className={`faq-item${isOpen ? " is-open" : ""}`} role="listitem">
- <button
- type="button"
- className="faq-question"
- aria-expanded={isOpen}
- aria-controls={`faq-panel-${index}`}
- id={`faq-trigger-${index}`}
- onClick={() => setOpenFaq((prev) => (prev === index ? -1 : index))}
- >
- <span>{item.question}</span>
- <span className="faq-icon" aria-hidden="true">{isOpen ? "-" : "+"}</span>
- </button>
- <div
- id={`faq-panel-${index}`}
- role="region"
- aria-labelledby={`faq-trigger-${index}`}
- className="faq-answer"
- aria-hidden={!isOpen}
- >
- <div className="faq-answer-inner">
- <p>{item.answer}</p>
- </div>
- </div>
- </article>
- );
- })}
- </div>
- </Container>
- </section>
  </div>
 
  </>

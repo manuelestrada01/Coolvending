@@ -1,5 +1,5 @@
 export default function WhatsAppFloatButton() {
-  const whatsappUrl = "https://wa.me/5492612318259";
+  const whatsappUrl = "https://wa.me/5492615661521";
 
   return (
     <a

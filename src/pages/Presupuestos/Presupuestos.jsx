@@ -7,7 +7,7 @@ import { generarYSubirPdf, enviarEmailPresupuesto } from "../../services/pdf/pre
 import PageHero from "../../shared/layout/PageHero";
 import "./Presupuestos.css";
 
-const WHATSAPP_NUMBER = "5492612318259";
+const WHATSAPP_NUMBER = "5492615661521";
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+\d\s\-().]{6,20}$/;
 

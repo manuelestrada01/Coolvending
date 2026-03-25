@@ -71,7 +71,7 @@ function sanitizeMaquinaPayload(data) {
   };
 }
 
-export async function addMaquina(data, imageFile, galeriaFiles = []) {
+export async function addMaquina(data, imageFile, galeriaFiles = [], detalleFiles = []) {
   const { ok, errors } = validateMaquinaForm(data);
   if (!ok) throw new Error("Datos de máquina inválidos: " + JSON.stringify(errors));
 
@@ -89,17 +89,24 @@ export async function addMaquina(data, imageFile, galeriaFiles = []) {
     galeria.push({ url: result.url, path: result.path });
   }
 
+  const detalleImagenes = [];
+  for (const file of detalleFiles.slice(0, 8)) {
+    const result = await uploadImage(file);
+    detalleImagenes.push({ url: result.url, path: result.path });
+  }
+
   return addDoc(collection(db, "maquinas"), {
     ...sanitizeMaquinaPayload(data),
     imagenURL,
     imagenPath,
     galeria,
+    detalleImagenes,
     creadoEn: serverTimestamp(),
     actualizadoEn: serverTimestamp(),
   });
 }
 
-export async function updateMaquina(id, data, imageFile, galeriaFiles = [], galeriaExistente = []) {
+export async function updateMaquina(id, data, imageFile, galeriaFiles = [], galeriaExistente = [], detalleFiles = [], detalleExistente = []) {
   const { ok, errors } = validateMaquinaForm(data);
   if (!ok) throw new Error("Datos de máquina inválidos: " + JSON.stringify(errors));
 
@@ -118,18 +125,29 @@ export async function updateMaquina(id, data, imageFile, galeriaFiles = [], gale
     galeria.push({ url: result.url, path: result.path });
   }
 
+  // Upload new detalle files and merge with existing ones kept
+  const detalleImagenes = [...detalleExistente];
+  for (const file of detalleFiles.slice(0, Math.max(0, 8 - detalleImagenes.length))) {
+    const result = await uploadImage(file);
+    detalleImagenes.push({ url: result.url, path: result.path });
+  }
+
   return updateDoc(doc(db, "maquinas", id), {
     ...sanitizeMaquinaPayload(data),
     imagenURL,
     imagenPath,
     galeria,
+    detalleImagenes,
     actualizadoEn: serverTimestamp(),
   });
 }
 
-export async function deleteMaquina(id, imagenPath, galeria = []) {
+export async function deleteMaquina(id, imagenPath, galeria = [], detalleImagenes = []) {
   await removeImage(imagenPath);
   for (const item of galeria) {
+    await removeImage(item.path);
+  }
+  for (const item of detalleImagenes) {
     await removeImage(item.path);
   }
   return deleteDoc(doc(db, "maquinas", id));

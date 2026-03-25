@@ -303,16 +303,32 @@ body[data-theme="dark"] {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Mobile: move theme+profile to the top of the expanded menu via CSS order */
+/* Mobile: login CTA full-width at bottom */
 @media (max-width: 991px) {
-  .cv-navbar .navbar-collapse > * {
-    order: 1;
-  }
   .cv-navbar .cv-navbar-actions {
-    order: 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--cv-border);
-    margin-bottom: 0.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--cv-border);
+    margin-top: 0.25rem;
+    justify-content: center;
+  }
+
+  .cv-navbar .cv-login-btn {
+    display: inline-block !important;
+    width: auto !important;
+    text-align: center;
+    background: transparent !important;
+    color: #d63384 !important;
+    border: 1.5px solid rgba(214, 51, 132, 0.4) !important;
+    border-radius: 999px !important;
+    padding: 0.4rem 1.1rem !important;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .cv-navbar .cv-login-btn:hover {
+    background: rgba(214, 51, 132, 0.06) !important;
+    border-color: #d63384 !important;
+    color: #d63384 !important;
   }
 }
 

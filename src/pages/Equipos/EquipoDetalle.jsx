@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Container, Spinner } from "react-bootstrap";
 import { getMaquinaById } from "../../services/firebase/maquinas";
 import PageHero from "../../shared/layout/PageHero";
+import { useScrollReveal } from "../../shared/utils/useScrollReveal";
 import "./EquipoDetalle.css";
 
 const GRADIENTS = [
@@ -24,6 +25,29 @@ function idToGradient(id) {
   let hash = 0;
   for (let i = 0; i < id.length; i++) hash = (hash + id.charCodeAt(i)) % GRADIENTS.length;
   return GRADIENTS[hash];
+}
+
+function DetalleItem({ url, nombre, index }) {
+  const [ref, visible] = useScrollReveal({ rootMargin: "0px 0px -60px 0px" });
+  return (
+    <figure
+      ref={ref}
+      className={`eqd-detalle-item${visible ? " eqd-detalle-item--visible" : ""}`}
+    >
+      <img src={url} alt={`${nombre} — detalle ${index + 1}`} className="eqd-detalle-img" />
+      <span className="eqd-detalle-num">{String(index + 1).padStart(2, "0")}</span>
+    </figure>
+  );
+}
+
+function DetalleHeader() {
+  const [ref, visible] = useScrollReveal({ rootMargin: "0px 0px -40px 0px" });
+  return (
+    <div ref={ref} className={`eqd-detalle-header${visible ? " eqd-detalle-header--visible" : ""}`}>
+      <span className="eqd-detalle-label">IMÁGENES DE DETALLE</span>
+      <h2 className="eqd-detalle-title">Más detalle</h2>
+    </div>
+  );
 }
 
 export default function EquipoDetalle() {
@@ -204,7 +228,7 @@ export default function EquipoDetalle() {
                     Solicitar presupuesto
                   </Link>
                   <a
-                    href="https://wa.me/5492612318259"
+                    href="https://wa.me/5492615661521"
                     target="_blank"
                     rel="noreferrer"
                     className="eqd-cta-btn eqd-cta-btn--secondary"
@@ -220,6 +244,20 @@ export default function EquipoDetalle() {
           )}
         </Container>
       </section>
+
+      {/* ── Más detalle ── */}
+      {maquina?.detalleImagenes?.length > 0 && (
+        <section className="eqd-detalle">
+          <Container>
+            <DetalleHeader />
+            <div className="eqd-detalle-grid">
+              {maquina.detalleImagenes.map(({ url }, i) => (
+                <DetalleItem key={url} url={url} nombre={maquina.nombre} index={i} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* ── Lightbox ── */}
       {lightbox && photos.length > 0 && (
