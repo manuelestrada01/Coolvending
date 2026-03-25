@@ -39,20 +39,14 @@ export default function Footer() {
         <Row className="footer-content g-4">
           <Col lg={4} md={12} className="footer-section footer-brand-col">
             <span className="footer-kicker">COOLVENDING</span>
-            <h5 className="footer-brand">Negocio dulce, tecnología real</h5>
+            <h5 className="footer-brand">Máquinas vending de última tecnología</h5>
             <p className="footer-text">
-              Máquinas de algodón de azúcar de última tecnología para emprendedores y eventos.
+              Soluciones vending automáticas para emprendedores, eventos y negocios de todo tipo.
             </p>
             <div className="footer-meta">
               <span>Soporte remoto</span>
               <span>Instalación guiada</span>
               <span>ROI estimado 4-6 meses</span>
-            </div>
-            <div className="social-links">
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">FB</a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
-              <a href="https://tiktok.com" target="_blank" rel="noreferrer" aria-label="TikTok">TT</a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" aria-label="YouTube">YT</a>
             </div>
           </Col>
 
