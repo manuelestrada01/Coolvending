@@ -23,7 +23,7 @@ import AlgodonM4 from "../../app/assets/images/models/algodonM4_s.png";
 import AlgodonM5 from "../../app/assets/images/models/algodonM5.png";
 import PororoM   from "../../app/assets/images/models/pororoM.png";
 
-const CATEGORIAS = ["Algodón de azúcar", "Café", "Pochoclo", "Globos"];
+const CATEGORIAS = ["Algodón de azúcar", "Café", "Pochoclo", "Globos", "Expendedoras"];
 
 const EMPTY_FORM = {
   nombre: "",

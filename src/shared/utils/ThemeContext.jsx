@@ -8,8 +8,10 @@ export function ThemeProvider({ children }) {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
-    localStorage.setItem("cv-theme", isDark ? "dark" : "light");
+    const theme = isDark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.setAttribute("data-bs-theme", theme);
+    localStorage.setItem("cv-theme", theme);
   }, [isDark]);
 
   const toggleTheme = () => setIsDark((prev) => !prev);

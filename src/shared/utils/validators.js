@@ -63,7 +63,7 @@ export function validateLoginForm({ email, password }) {
   return { ok: Object.keys(errors).length === 0, errors };
 }
 
-const CATEGORIAS_VALIDAS = ["Algodón de azúcar", "Café", "Pochoclo", "Globos"];
+const CATEGORIAS_VALIDAS = ["Algodón de azúcar", "Café", "Pochoclo", "Globos", "Expendedoras"];
 
 export function validateMaquinaForm({ nombre, categoria, descripcion }) {
   const errors = {};

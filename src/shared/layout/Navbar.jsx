@@ -59,7 +59,7 @@ export default function SiteNavbar() {
     navigate("/");
   };
   return (
-    <Navbar bg="light" expand="lg" expanded={expanded} onToggle={handleToggle} className={`cv-navbar${hidden ? " cv-navbar--hidden" : ""}`}>
+    <Navbar expand="lg" expanded={expanded} onToggle={handleToggle} className={`cv-navbar${hidden ? " cv-navbar--hidden" : ""}`}>
       <Container>
         {/* Logo */}
         <Navbar.Brand as={NavLink} to="/" className="cv-brand">

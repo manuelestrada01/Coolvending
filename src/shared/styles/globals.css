@@ -112,12 +112,14 @@ body[data-theme="dark"] {
   -webkit-backdrop-filter: blur(11px);
   border-bottom: 1px solid var(--cv-border);
   box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-  transform: translateY(0);
+  transform: translateY(0) translateZ(0);
+  -webkit-transform: translateY(0) translateZ(0);
   transition: transform 0.35s ease;
 }
 
 .cv-navbar--hidden {
-  transform: translateY(-100%);
+  transform: translateY(-100%) translateZ(0);
+  -webkit-transform: translateY(-100%) translateZ(0);
 }
 
 .cv-navbar::before {

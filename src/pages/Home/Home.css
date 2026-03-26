@@ -350,12 +350,7 @@
   transform: translateZ(0);
 }
 
-.models,
-.about,
-.features {
-  content-visibility: auto;
-  contain-intrinsic-size: 900px;
-}
+/* content-visibility removed — buggy on Safari/iOS */
 
 .hero-collage {
   position: relative;
@@ -625,6 +620,7 @@
 .home-canvas {
   position: relative;
   background: var(--cv-black);
+  overflow: hidden;
 }
 
 .home-deco {
