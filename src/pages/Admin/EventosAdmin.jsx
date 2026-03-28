@@ -8,10 +8,11 @@ import {
   updateEvento,
   deleteEvento,
 } from "../../services/firebase/eventosService";
-import { validateEventoForm, validateImageFile } from "../../shared/utils/validators";
+import { validateEventoForm, validateImageFile, validateVideoFile } from "../../shared/utils/validators";
 
 const CATEGORIAS = ["Cumpleaños", "Corporativo", "Social", "Feria", "Escolar", "Casamiento", "Otro"];
 const MAX_PHOTOS = 3;
+const MAX_VIDEOS = 5;
 
 const EMPTY_FORM = {
   titulo: "",
@@ -21,6 +22,7 @@ const EMPTY_FORM = {
   categoria: "Cumpleaños",
   fecha: "",
   fotos: [],
+  videos: [],
 };
 
 export default function EventosAdmin() {
@@ -30,15 +32,23 @@ export default function EventosAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+
+  // Photos
   const [newFiles, setNewFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
   const [removedPaths, setRemovedPaths] = useState([]);
+  const fileInputRef = useRef(null);
+
+  // Videos
+  const [newVideoFiles, setNewVideoFiles] = useState([]);
+  const [videoPreviews, setVideoPreviews] = useState([]);
+  const [removedVideoPaths, setRemovedVideoPaths] = useState([]);
+  const videoInputRef = useRef(null);
+
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [deleting, setDeleting] = useState(null);
-
-  const fileInputRef = useRef(null);
 
   const loadEventos = async () => {
     setFetching(true);
@@ -60,6 +70,9 @@ export default function EventosAdmin() {
     setNewFiles([]);
     setPreviews([]);
     setRemovedPaths([]);
+    setNewVideoFiles([]);
+    setVideoPreviews([]);
+    setRemovedVideoPaths([]);
     setFormError(null);
     setFieldErrors({});
     setShowModal(true);
@@ -75,10 +88,14 @@ export default function EventosAdmin() {
       categoria: CATEGORIAS.includes(ev.categoria) ? ev.categoria : CATEGORIAS[0],
       fecha: ev.fecha ?? "",
       fotos: ev.fotos ?? [],
+      videos: ev.videos ?? [],
     });
     setNewFiles([]);
     setPreviews([]);
     setRemovedPaths([]);
+    setNewVideoFiles([]);
+    setVideoPreviews([]);
+    setRemovedVideoPaths([]);
     setFormError(null);
     setFieldErrors({});
     setShowModal(true);
@@ -86,17 +103,21 @@ export default function EventosAdmin() {
 
   const closeModal = () => {
     previews.forEach((p) => URL.revokeObjectURL(p.preview));
+    videoPreviews.forEach((p) => URL.revokeObjectURL(p.preview));
     setShowModal(false);
     setEditing(null);
     setNewFiles([]);
     setPreviews([]);
     setRemovedPaths([]);
+    setNewVideoFiles([]);
+    setVideoPreviews([]);
+    setRemovedVideoPaths([]);
   };
 
   // ── Photo helpers ──
   const existingPhotos = (form.fotos || []).filter((f) => !removedPaths.includes(f.path));
   const totalPhotos = existingPhotos.length + newFiles.length;
-  const availableSlots = MAX_PHOTOS - totalPhotos;
+  const availablePhotoSlots = MAX_PHOTOS - totalPhotos;
 
   const handleFileChange = (e) => {
     const selected = Array.from(e.target.files || []);
@@ -119,14 +140,44 @@ export default function EventosAdmin() {
     setFormError(null);
   };
 
-  const removeExistingPhoto = (path) => {
-    setRemovedPaths((prev) => [...prev, path]);
-  };
-
+  const removeExistingPhoto = (path) => setRemovedPaths((prev) => [...prev, path]);
   const removeNewFile = (idx) => {
     URL.revokeObjectURL(previews[idx].preview);
     setNewFiles((prev) => prev.filter((_, i) => i !== idx));
     setPreviews((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  // ── Video helpers ──
+  const existingVideos = (form.videos || []).filter((v) => !removedVideoPaths.includes(v.path));
+  const totalVideos = existingVideos.length + newVideoFiles.length;
+  const availableVideoSlots = MAX_VIDEOS - totalVideos;
+
+  const handleVideoFileChange = (e) => {
+    const selected = Array.from(e.target.files || []);
+    if (videoInputRef.current) videoInputRef.current.value = "";
+
+    const validated = [];
+    for (const file of selected) {
+      if (newVideoFiles.length + validated.length + existingVideos.length >= MAX_VIDEOS) break;
+      const err = validateVideoFile(file);
+      if (err) { setFormError(err); return; }
+      validated.push(file);
+    }
+
+    const newPreviews = validated.map((f) => ({
+      file: f,
+      preview: URL.createObjectURL(f),
+    }));
+    setNewVideoFiles((prev) => [...prev, ...validated]);
+    setVideoPreviews((prev) => [...prev, ...newPreviews]);
+    setFormError(null);
+  };
+
+  const removeExistingVideo = (path) => setRemovedVideoPaths((prev) => [...prev, path]);
+  const removeNewVideo = (idx) => {
+    URL.revokeObjectURL(videoPreviews[idx].preview);
+    setNewVideoFiles((prev) => prev.filter((_, i) => i !== idx));
+    setVideoPreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
   // ── Form handlers ──
@@ -150,9 +201,9 @@ export default function EventosAdmin() {
     setSubmitting(true);
     try {
       if (editing) {
-        await updateEvento(editing.id, form, newFiles, removedPaths);
+        await updateEvento(editing.id, form, newFiles, removedPaths, newVideoFiles, removedVideoPaths);
       } else {
-        await addEvento(form, newFiles);
+        await addEvento(form, newFiles, newVideoFiles);
       }
       closeModal();
       await loadEventos();
@@ -167,7 +218,7 @@ export default function EventosAdmin() {
     if (!window.confirm(`¿Eliminar el evento "${ev.titulo}"? Esta acción no se puede deshacer.`)) return;
     setDeleting(ev.id);
     try {
-      await deleteEvento(ev.id, ev.fotos ?? []);
+      await deleteEvento(ev.id, ev.fotos ?? [], ev.videos ?? []);
       await loadEventos();
     } catch (err) {
       console.error(err);
@@ -206,6 +257,7 @@ export default function EventosAdmin() {
         <Row className="g-3">
           {eventos.map((ev) => {
             const portada = ev.fotos?.[0]?.url ?? null;
+            const videoCount = ev.videos?.length ?? 0;
             return (
               <Col key={ev.id} xs={12} sm={6} lg={4}>
                 <div className="admin-machine-card" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -218,11 +270,18 @@ export default function EventosAdmin() {
                     <Badge bg="dark" style={{ position: "absolute", top: 10, left: 10, fontSize: "0.7rem" }}>
                       {ev.categoria}
                     </Badge>
-                    {ev.fotos?.length > 0 && (
-                      <Badge bg="secondary" style={{ position: "absolute", top: 10, right: 10, fontSize: "0.7rem" }}>
-                        {ev.fotos.length} foto{ev.fotos.length > 1 ? "s" : ""}
-                      </Badge>
-                    )}
+                    <div style={{ position: "absolute", top: 10, right: 10, display: "flex", gap: "4px" }}>
+                      {ev.fotos?.length > 0 && (
+                        <Badge bg="secondary" style={{ fontSize: "0.7rem" }}>
+                          📷 {ev.fotos.length}
+                        </Badge>
+                      )}
+                      {videoCount > 0 && (
+                        <Badge bg="dark" style={{ fontSize: "0.7rem", background: "#7b2d8b !important" }}>
+                          🎬 {videoCount}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <div style={{ padding: "1rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
                     <p style={{ margin: 0, fontWeight: 700, color: "var(--cv-text-primary)", fontSize: "0.95rem", lineHeight: 1.3 }}>{ev.titulo}</p>
@@ -349,15 +408,13 @@ export default function EventosAdmin() {
                 <Form.Label style={{ fontWeight: 600, fontSize: "0.85rem" }}>
                   Fotos (máx. {MAX_PHOTOS}) — {totalPhotos}/{MAX_PHOTOS}
                 </Form.Label>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginBottom: availableSlots > 0 ? "0.75rem" : 0 }}>
-                  {/* Fotos existentes (edición) */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginBottom: availablePhotoSlots > 0 ? "0.75rem" : 0 }}>
                   {existingPhotos.map((f) => (
                     <div key={f.path} style={{ position: "relative", width: 100, height: 100 }}>
                       <img src={f.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 10 }} />
                       <button type="button" onClick={() => removeExistingPhoto(f.path)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.65)", border: "none", borderRadius: "50%", width: 22, height: 22, color: "#fff", cursor: "pointer", fontSize: "0.75rem", lineHeight: 1 }}>✕</button>
                     </div>
                   ))}
-                  {/* Previews nuevas */}
                   {previews.map((p, i) => (
                     <div key={i} style={{ position: "relative", width: 100, height: 100 }}>
                       <img src={p.preview} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 10, opacity: 0.85 }} />
@@ -365,8 +422,7 @@ export default function EventosAdmin() {
                       <span style={{ position: "absolute", bottom: 4, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: "0.6rem", borderRadius: 4, padding: "1px 5px", whiteSpace: "nowrap" }}>nueva</span>
                     </div>
                   ))}
-                  {/* Botón agregar */}
-                  {availableSlots > 0 && (
+                  {availablePhotoSlots > 0 && (
                     <button type="button" onClick={() => fileInputRef.current?.click()} style={{ width: 100, height: 100, borderRadius: 10, border: "2px dashed var(--cv-border)", background: "transparent", cursor: "pointer", color: "var(--cv-text-secondary)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, fontSize: "0.7rem" }}>
                       <span style={{ fontSize: "1.4rem" }}>+</span>
                       Agregar
@@ -383,6 +439,52 @@ export default function EventosAdmin() {
                 />
                 <Form.Text style={{ fontSize: "0.75rem", color: "var(--cv-text-secondary)" }}>
                   JPG, PNG o WebP · Máx. 5 MB por imagen
+                </Form.Text>
+              </Col>
+
+              {/* ── Videos ── */}
+              <Col xs={12}>
+                <Form.Label style={{ fontWeight: 600, fontSize: "0.85rem" }}>
+                  Videos (máx. {MAX_VIDEOS}) — {totalVideos}/{MAX_VIDEOS}
+                  <span style={{ fontWeight: 400, marginLeft: "0.5rem", color: "var(--cv-text-secondary)", fontSize: "0.78rem" }}>nunca se usan como portada</span>
+                </Form.Label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginBottom: availableVideoSlots > 0 ? "0.75rem" : 0 }}>
+                  {existingVideos.map((v) => (
+                    <div key={v.path} style={{ position: "relative", width: 120, height: 80 }}>
+                      <video src={v.url} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 10 }} muted />
+                      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                        <span style={{ fontSize: "1.4rem", opacity: 0.8 }}>▶</span>
+                      </div>
+                      <button type="button" onClick={() => removeExistingVideo(v.path)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.65)", border: "none", borderRadius: "50%", width: 22, height: 22, color: "#fff", cursor: "pointer", fontSize: "0.75rem", lineHeight: 1 }}>✕</button>
+                    </div>
+                  ))}
+                  {videoPreviews.map((p, i) => (
+                    <div key={i} style={{ position: "relative", width: 120, height: 80 }}>
+                      <video src={p.preview} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: 10, opacity: 0.85 }} muted />
+                      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                        <span style={{ fontSize: "1.4rem", opacity: 0.8 }}>▶</span>
+                      </div>
+                      <button type="button" onClick={() => removeNewVideo(i)} style={{ position: "absolute", top: 4, right: 4, background: "rgba(0,0,0,0.65)", border: "none", borderRadius: "50%", width: 22, height: 22, color: "#fff", cursor: "pointer", fontSize: "0.75rem", lineHeight: 1 }}>✕</button>
+                      <span style={{ position: "absolute", bottom: 4, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.55)", color: "#fff", fontSize: "0.6rem", borderRadius: 4, padding: "1px 5px", whiteSpace: "nowrap" }}>nuevo</span>
+                    </div>
+                  ))}
+                  {availableVideoSlots > 0 && (
+                    <button type="button" onClick={() => videoInputRef.current?.click()} style={{ width: 120, height: 80, borderRadius: 10, border: "2px dashed var(--cv-border)", background: "transparent", cursor: "pointer", color: "var(--cv-text-secondary)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, fontSize: "0.7rem" }}>
+                      <span style={{ fontSize: "1.4rem" }}>+</span>
+                      Agregar video
+                    </button>
+                  )}
+                </div>
+                <Form.Control
+                  ref={videoInputRef}
+                  type="file"
+                  accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                  multiple
+                  style={{ display: "none" }}
+                  onChange={handleVideoFileChange}
+                />
+                <Form.Text style={{ fontSize: "0.75rem", color: "var(--cv-text-secondary)" }}>
+                  MP4, WebM, OGG o MOV · Máx. 100 MB por video
                 </Form.Text>
               </Col>
             </Row>

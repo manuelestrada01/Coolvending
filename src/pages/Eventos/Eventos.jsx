@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useScrollReveal } from "../../shared/utils/useScrollReveal";
@@ -370,13 +370,101 @@ function BookingPanel({ plan }) {
   );
 }
 
+/* ─── Photo Lightbox ────────────────────────────── */
+function PhotoLightbox({ fotos, startIdx, onClose }) {
+  const [idx, setIdx] = useState(startIdx ?? 0);
+  const total = fotos.length;
+
+  const prev = useCallback(() => setIdx(i => (i - 1 + total) % total), [total]);
+  const next = useCallback(() => setIdx(i => (i + 1) % total), [total]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose, prev, next]);
+
+  return (
+    <div className="ev-lb" onClick={onClose} role="dialog" aria-modal="true">
+      <button className="ev-lb__close" onClick={onClose} aria-label="Cerrar">
+        <CloseIcon />
+      </button>
+      <span className="ev-lb__counter">{idx + 1} / {total}</span>
+
+      <div className="ev-lb__content" onClick={e => e.stopPropagation()}>
+        {fotos[idx].type === "video" ? (
+          <video
+            key={fotos[idx].url}
+            src={fotos[idx].url}
+            className="ev-lb__img"
+            controls
+            autoPlay
+            playsInline
+          />
+        ) : (
+          <img
+            src={fotos[idx].url}
+            alt={`Foto ${idx + 1}`}
+            className="ev-lb__img"
+          />
+        )}
+      </div>
+
+      {total > 1 && (
+        <>
+          <button className="ev-lb__nav ev-lb__nav--prev" onClick={e => { e.stopPropagation(); prev(); }} aria-label="Anterior">
+            <ChevronLeft />
+          </button>
+          <button className="ev-lb__nav ev-lb__nav--next" onClick={e => { e.stopPropagation(); next(); }} aria-label="Siguiente">
+            <ChevronRight />
+          </button>
+        </>
+      )}
+
+      {total > 1 && (
+        <div className="ev-lb__thumbs" onClick={e => e.stopPropagation()}>
+          {fotos.map((f, i) => (
+            <button
+              key={i}
+              className={`ev-lb__thumb${i === idx ? " ev-lb__thumb--active" : ""}${f.type === "video" ? " ev-lb__thumb--video" : ""}`}
+              onClick={() => setIdx(i)}
+              aria-label={`${f.type === "video" ? "Video" : "Foto"} ${i + 1}`}
+            >
+              {f.type === "video" ? (
+                <div className="ev-lb__thumb-video-icon">▶</div>
+              ) : (
+                <img src={f.url} alt={`Miniatura ${i + 1}`} />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ─── Event card (Firestore data) ──────────────── */
 function EventCard({ evento, className, style }) {
-  const portada = evento.fotos?.[0]?.url ?? null;
+  const fotos = evento.fotos?.filter(f => f?.url) ?? [];
+  const videos = evento.videos?.filter(v => v?.url) ?? [];
+  const media = [
+    ...fotos.map(f => ({ ...f, type: "image" })),
+    ...videos.map(v => ({ ...v, type: "video" })),
+  ];
+  const portada = fotos[0]?.url ?? null;
   const categoria = evento.categoria ?? "Otro";
   const icon = CATEGORIA_ICONS[categoria] ?? <IconStar />;
   const gradiente = CATEGORIA_GRADIENTS[categoria] ?? "ev-grad--1";
   const tagCls = CATEGORIA_TAG[categoria] ?? "social";
+  const [lightboxIdx, setLightboxIdx] = useState(null);
 
   let dia = "--", mes = "---";
   if (evento.fecha) {
@@ -387,7 +475,17 @@ function EventCard({ evento, className, style }) {
 
   return (
     <article className={`ev-card${className ? ` ${className}` : ""}`} style={style}>
-      <div className="ev-card__img-wrap">
+      {lightboxIdx !== null && media.length > 0 && (
+        <PhotoLightbox
+          fotos={media}
+          startIdx={lightboxIdx}
+          onClose={() => setLightboxIdx(null)}
+        />
+      )}
+      <div
+        className={`ev-card__img-wrap${media.length > 0 ? " ev-card__img-wrap--clickable" : ""}`}
+        onClick={media.length > 0 ? () => setLightboxIdx(0) : undefined}
+      >
         {portada ? (
           <img
             src={portada}
@@ -403,6 +501,15 @@ function EventCard({ evento, className, style }) {
         <div className="ev-card__date-ribbon">
           <strong>{dia}</strong>{mes}
         </div>
+        {media.length > 1 && (
+          <span className="ev-card__photo-count">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            {media.length}
+          </span>
+        )}
       </div>
 
       <div className="ev-card__body">

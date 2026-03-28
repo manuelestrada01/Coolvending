@@ -11,9 +11,10 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./firebase";
-import { validateImageFile } from "../../shared/utils/validators";
+import { validateImageFile, validateVideoFile } from "../../shared/utils/validators";
 
 const MAX_PHOTOS = 3;
+const MAX_VIDEOS = 5;
 
 async function uploadEventoPhoto(file, eventoId) {
   const err = validateImageFile(file);
@@ -26,7 +27,18 @@ async function uploadEventoPhoto(file, eventoId) {
   return { url, path };
 }
 
-async function removePhoto(path) {
+async function uploadEventoVideo(file, eventoId) {
+  const err = validateVideoFile(file);
+  if (err) throw new Error(err);
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const path = `eventos/${eventoId}/videos/${Date.now()}-${safeName}`;
+  const storageRef = ref(storage, path);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+  return { url, path };
+}
+
+async function removeFile(path) {
   if (!path || !path.startsWith("eventos/")) return;
   try {
     await deleteObject(ref(storage, path));
@@ -52,10 +64,11 @@ export async function getEventos() {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-export async function addEvento(data, files = []) {
+export async function addEvento(data, files = [], videoFiles = []) {
   const docRef = await addDoc(collection(db, "eventos"), {
     ...sanitizeEventoPayload(data),
     fotos: [],
+    videos: [],
     creadoEn: serverTimestamp(),
     actualizadoEn: serverTimestamp(),
   });
@@ -66,36 +79,56 @@ export async function addEvento(data, files = []) {
     fotos.push(photo);
   }
 
-  if (fotos.length > 0) {
-    await updateDoc(docRef, { fotos });
+  const videos = [];
+  for (const file of videoFiles.slice(0, MAX_VIDEOS)) {
+    const video = await uploadEventoVideo(file, docRef.id);
+    videos.push(video);
+  }
+
+  if (fotos.length > 0 || videos.length > 0) {
+    await updateDoc(docRef, { fotos, videos });
   }
   return docRef;
 }
 
-export async function updateEvento(id, data, newFiles = [], removedPaths = []) {
+export async function updateEvento(id, data, newFiles = [], removedPaths = [], newVideoFiles = [], removedVideoPaths = []) {
   for (const path of removedPaths) {
-    await removePhoto(path);
+    await removeFile(path);
+  }
+  for (const path of removedVideoPaths) {
+    await removeFile(path);
   }
 
   const existingFotos = (data.fotos || []).filter((f) => !removedPaths.includes(f.path));
   const newFotos = [];
-  const availableSlots = MAX_PHOTOS - existingFotos.length;
-
-  for (const file of newFiles.slice(0, availableSlots)) {
+  const availablePhotoSlots = MAX_PHOTOS - existingFotos.length;
+  for (const file of newFiles.slice(0, availablePhotoSlots)) {
     const photo = await uploadEventoPhoto(file, id);
     newFotos.push(photo);
+  }
+
+  const existingVideos = (data.videos || []).filter((v) => !removedVideoPaths.includes(v.path));
+  const newVideos = [];
+  const availableVideoSlots = MAX_VIDEOS - existingVideos.length;
+  for (const file of newVideoFiles.slice(0, availableVideoSlots)) {
+    const video = await uploadEventoVideo(file, id);
+    newVideos.push(video);
   }
 
   return updateDoc(doc(db, "eventos", id), {
     ...sanitizeEventoPayload(data),
     fotos: [...existingFotos, ...newFotos],
+    videos: [...existingVideos, ...newVideos],
     actualizadoEn: serverTimestamp(),
   });
 }
 
-export async function deleteEvento(id, fotos = []) {
+export async function deleteEvento(id, fotos = [], videos = []) {
   for (const f of fotos) {
-    await removePhoto(f.path);
+    await removeFile(f.path);
+  }
+  for (const v of videos) {
+    await removeFile(v.path);
   }
   return deleteDoc(doc(db, "eventos", id));
 }

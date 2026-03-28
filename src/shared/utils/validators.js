@@ -31,6 +31,21 @@ export function validateImageFile(file) {
   return null;
 }
 
+// ─── Video file ────────────────────────────────────────────
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024; // 100 MB
+
+export function validateVideoFile(file) {
+  if (!file) return null;
+  if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+    return "Solo se permiten videos MP4, WebM, OGG o MOV.";
+  }
+  if (file.size > MAX_VIDEO_BYTES) {
+    return "El video no puede superar los 100 MB.";
+  }
+  return null;
+}
+
 // ─── Domain validators (return { ok, errors }) ─────────────
 
 export function validateContactForm({ nombre, email, telefono, mensaje }) {
