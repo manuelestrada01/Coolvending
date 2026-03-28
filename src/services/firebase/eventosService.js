@@ -13,7 +13,7 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage
 import { db, storage } from "./firebase";
 import { validateImageFile, validateVideoFile } from "../../shared/utils/validators";
 
-const MAX_PHOTOS = 3;
+const MAX_PHOTOS = 10;
 const MAX_VIDEOS = 5;
 
 async function uploadEventoPhoto(file, eventoId) {

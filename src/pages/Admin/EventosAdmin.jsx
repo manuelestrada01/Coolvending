@@ -11,7 +11,7 @@ import {
 import { validateEventoForm, validateImageFile, validateVideoFile } from "../../shared/utils/validators";
 
 const CATEGORIAS = ["Cumpleaños", "Corporativo", "Social", "Feria", "Escolar", "Casamiento", "Otro"];
-const MAX_PHOTOS = 3;
+const MAX_PHOTOS = 10;
 const MAX_VIDEOS = 5;
 
 const EMPTY_FORM = {
