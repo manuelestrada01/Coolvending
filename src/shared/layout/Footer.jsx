@@ -99,7 +99,15 @@ export default function Footer() {
           </Col>
           <Col md={4} className="text-center">
             <p className="footer-powered-text">
-              Powered by <span className="footer-powered-name">Manuel Estrada</span>
+              Powered by{" "}
+              <a
+                href="https://m-estrada.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-powered-name"
+              >
+                Manuel Estrada
+              </a>
             </p>
           </Col>
           <Col md={4} className="footer-links-bottom">

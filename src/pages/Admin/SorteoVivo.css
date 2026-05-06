@@ -1,0 +1,1011 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap');
+
+/* ══════════════════════════════════════════════════════════
+   SORTEO VIVO — Broadcast Stage
+   Aesthetic: dark broadcast control, dramatic, cinematic
+   ══════════════════════════════════════════════════════════ */
+
+/* ─── Overlay ─────────────────────────────────────────────── */
+.sv-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #04040a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Space Mono', 'Courier New', monospace;
+}
+
+/* ─── Background ──────────────────────────────────────────── */
+.sv-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.sv-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: svOrbDrift 12s ease-in-out infinite;
+}
+
+.sv-bg-orb--1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(214, 51, 132, 0.18), transparent 65%);
+  top: -200px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.sv-bg-orb--2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center, rgba(245, 165, 36, 0.12), transparent 65%);
+  bottom: -150px;
+  right: -80px;
+  animation-delay: -4s;
+}
+
+.sv-bg-orb--3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle at center, rgba(224, 64, 251, 0.1), transparent 65%);
+  top: 35%;
+  left: 40%;
+  animation-delay: -8s;
+}
+
+@keyframes svOrbDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  30%       { transform: translate(25px, -18px) scale(1.04); }
+  65%       { transform: translate(-18px, 22px) scale(0.96); }
+}
+
+/* Broadcast scanlines overlay */
+.sv-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.025) 3px,
+    rgba(0, 0, 0, 0.025) 4px
+  );
+  pointer-events: none;
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+.sv-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.75rem;
+  border-bottom: 1px solid rgba(214, 51, 132, 0.15);
+  background: rgba(4, 4, 10, 0.85);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
+}
+
+.sv-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sv-back-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.sv-header-center {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sv-header-icon {
+  font-size: 1.35rem;
+}
+
+.sv-header-title {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #fff;
+  margin: 0;
+  line-height: 1;
+}
+
+.sv-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.sv-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  color: #ef4444;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 0.38rem 0.85rem;
+  border-radius: 99px;
+}
+
+.sv-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+  animation: svLivePulse 1.3s ease-in-out infinite;
+}
+
+@keyframes svLivePulse {
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px #ef4444; }
+  50%       { opacity: 0.5; transform: scale(0.8); box-shadow: 0 0 2px #ef4444; }
+}
+
+/* ─── Body ────────────────────────────────────────────────── */
+.sv-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Stage ───────────────────────────────────────────────── */
+.sv-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 3.5rem;
+  gap: 2rem;
+  min-width: 0;
+  position: relative;
+  border-right: 1px solid rgba(214, 51, 132, 0.1);
+}
+
+/* ─── Current premio ──────────────────────────────────────── */
+.sv-current-premio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  width: 100%;
+  max-width: 620px;
+  position: relative;
+}
+
+.sv-current-trophy {
+  font-size: 3rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sv-current-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.sv-current-lugar {
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.sv-current-nombre {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sv-no-premio {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.sv-resorteo-badge {
+  margin-left: auto;
+  background: rgba(245, 165, 36, 0.12);
+  border: 1px solid rgba(245, 165, 36, 0.3);
+  color: #f5a524;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+/* ─── Drum stage ──────────────────────────────────────────── */
+.sv-drum-stage {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.sv-drum-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  transition: color 0.3s ease;
+}
+
+.sv-drum-label--winner {
+  color: #d63384;
+  text-shadow: 0 0 20px rgba(214, 51, 132, 0.5);
+}
+
+/* Slot machine wrapper */
+.sv-slot-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Direct-DOM drum display */
+.sv-drum-display {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  line-height: 1.1;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  word-break: break-word;
+}
+
+.sv-drum-display--rolling {
+  border-color: rgba(214, 51, 132, 0.2);
+  background: rgba(214, 51, 132, 0.03);
+}
+
+.sv-drum-display--hidden {
+  display: none;
+}
+
+/* Winner name — React-controlled */
+.sv-winner-name {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  line-height: 1.05;
+  word-break: break-word;
+
+  /* Animated gradient text — brand signature */
+  background: linear-gradient(90deg, #d63384, #f5a524, #e040fb, #ff6b9d, #d63384);
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: svWinnerGrad 3s ease infinite;
+
+  /* Glow effect */
+  filter: drop-shadow(0 0 28px rgba(214, 51, 132, 0.45)) drop-shadow(0 0 60px rgba(245, 165, 36, 0.2));
+
+  /* Stage border */
+  border: 1px solid rgba(214, 51, 132, 0.35);
+  background-color: rgba(214, 51, 132, 0.04);
+  box-shadow:
+    0 0 30px rgba(214, 51, 132, 0.12),
+    0 0 80px rgba(214, 51, 132, 0.06),
+    inset 0 0 30px rgba(214, 51, 132, 0.04);
+}
+
+@keyframes svWinnerGrad {
+  0%   { background-position: 0% center; }
+  50%  { background-position: 150% center; }
+  100% { background-position: 300% center; }
+}
+
+/* Winner block wrapper */
+.sv-winner-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.sv-winner-instagram {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(214, 51, 132, 0.1);
+  border: 1px solid rgba(214, 51, 132, 0.25);
+  padding: 0.35rem 1rem;
+  border-radius: 99px;
+}
+
+.sv-winner-instagram svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.sv-verified-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #10b981;
+  opacity: 0.85;
+}
+
+/* Confetti */
+.sv-confetti-origin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+}
+
+.sv-particle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ─── Actions ─────────────────────────────────────────────── */
+.sv-actions {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-height: 110px;
+  justify-content: center;
+}
+
+/* SORTEAR button — the hero CTA */
+.sv-btn-sortear {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  width: 100%;
+  max-width: 420px;
+  padding: 1.4rem 2rem;
+  background: linear-gradient(135deg, #d63384, #f5a524);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  animation: svSortearPulse 2.8s ease-in-out infinite;
+}
+
+.sv-btn-sortear::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 50%);
+  pointer-events: none;
+}
+
+.sv-btn-sortear:hover:not(:disabled) {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 50px rgba(214, 51, 132, 0.55), 0 4px 16px rgba(245, 165, 36, 0.3);
+  animation: none;
+}
+
+.sv-btn-sortear:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+.sv-btn-sortear:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  animation: none;
+}
+
+.sv-btn-sortear-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.sv-btn-sortear-label {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.25em;
+  color: #fff;
+  line-height: 1;
+}
+
+.sv-btn-sortear-sub {
+  font-family: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+}
+
+@keyframes svSortearPulse {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(214, 51, 132, 0.4), 0 2px 8px rgba(245, 165, 36, 0.2);
+  }
+  50% {
+    box-shadow: 0 10px 50px rgba(214, 51, 132, 0.65), 0 4px 16px rgba(245, 165, 36, 0.35);
+  }
+}
+
+/* Sorteando state */
+.sv-sorteando-state {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1.5rem;
+  min-height: 80px;
+}
+
+.sv-pulse-ring {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid rgba(214, 51, 132, 0.5);
+  animation: svPulseRing 1.4s ease-out infinite;
+}
+
+.sv-pulse-ring--2 {
+  animation-delay: 0.5s;
+  border-color: rgba(245, 165, 36, 0.4);
+}
+
+@keyframes svPulseRing {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.sv-sorteando-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+/* Revelado actions */
+.sv-revelado-actions {
+  display: flex;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 520px;
+}
+
+.sv-btn-confirmar {
+  flex: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.25rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.sv-btn-confirmar:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
+}
+
+.sv-btn-confirmar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sv-saving-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(16, 185, 129, 0.3);
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: svSpin 0.7s linear infinite;
+}
+
+@keyframes svSpin {
+  to { transform: rotate(360deg); }
+}
+
+.sv-btn-resortear {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  line-height: 1.3;
+}
+
+.sv-btn-resortear:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.sv-resortear-hint {
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  opacity: 0.65;
+  text-transform: none;
+  display: block;
+}
+
+/* Error toast */
+.sv-error-toast {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 0.82rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  white-space: nowrap;
+  z-index: 5;
+  max-width: 90%;
+  white-space: normal;
+}
+
+.sv-error-close {
+  background: none;
+  border: none;
+  color: #fca5a5;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  margin-left: 0.25rem;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.sv-error-close:hover { opacity: 1; }
+
+/* ─── Sidebar ─────────────────────────────────────────────── */
+.sv-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  padding: 1.25rem 1rem 1.5rem;
+  gap: 1.25rem;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(214, 51, 132, 0.3) transparent;
+}
+
+.sv-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sv-sidebar::-webkit-scrollbar-track { background: transparent; }
+.sv-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(214, 51, 132, 0.3);
+  border-radius: 2px;
+}
+
+/* Stats bar */
+.sv-stats-bar {
+  display: flex;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sv-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.85rem 0.5rem;
+  gap: 0.25rem;
+}
+
+.sv-stat-divider {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.sv-stat-val {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.8rem;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.sv-stat-lbl {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
+/* Sidebar blocks */
+.sv-sidebar-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sv-sidebar-block--winners {
+  padding-top: 0.25rem;
+}
+
+.sv-sidebar-heading {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.22);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Premio rows */
+.sv-premios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sv-premio-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.sv-premio-row:hover:not(:disabled):not(.sv-premio-row--done):not(.sv-premio-row--active) {
+  background: rgba(214, 51, 132, 0.07);
+  border-color: rgba(214, 51, 132, 0.2);
+}
+
+.sv-premio-row--active {
+  background: rgba(214, 51, 132, 0.1);
+  border-color: rgba(214, 51, 132, 0.4);
+  box-shadow: 0 0 0 1px rgba(214, 51, 132, 0.15), inset 0 0 20px rgba(214, 51, 132, 0.04);
+}
+
+.sv-premio-row--done {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sv-premio-row-trophy {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sv-premio-row-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.sv-premio-row-lugar {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  line-height: 1;
+}
+
+.sv-premio-row-desc {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.sv-premio-row-winner {
+  font-size: 0.72rem;
+  color: #10b981;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.sv-premio-row-status {
+  font-size: 1rem;
+  flex-shrink: 0;
+  line-height: 1;
+  font-weight: 700;
+  width: 16px;
+  text-align: center;
+}
+
+.sv-premio-row-status--done  { color: #10b981; }
+.sv-premio-row-status--active { color: #d63384; font-size: 1.3rem; }
+
+/* Winners list */
+.sv-winners-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sv-winner-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+}
+
+.sv-winner-row-trophy {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sv-winner-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.sv-winner-row-lugar {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.sv-winner-row-nombre {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Completo ────────────────────────────────────────────── */
+.sv-completo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.sv-completo-trophy {
+  font-size: 5.5rem;
+  filter: drop-shadow(0 0 20px rgba(245, 165, 36, 0.4));
+  animation: svTrophyFloat 3s ease-in-out infinite;
+}
+
+@keyframes svTrophyFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.sv-completo-title {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: 0.12em;
+  color: #fff;
+  margin: 0;
+  background: linear-gradient(135deg, #d63384, #f5a524);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sv-completo-sub {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.88rem;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.sv-completo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.sv-completo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+}
+
+.sv-completo-item-nombre {
+  font-family: 'Bebas Neue', 'Impact', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sv-body {
+    flex-direction: column;
+  }
+
+  .sv-stage {
+    padding: 1.75rem 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(214, 51, 132, 0.1);
+  }
+
+  .sv-sidebar {
+    width: 100%;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 1rem 1rem 1.25rem;
+    flex-shrink: 0;
+    max-height: 45vh;
+  }
+
+  .sv-premio-row-desc {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-break: break-word;
+  }
+
+  .sv-stats-bar {
+    flex-direction: row;
+  }
+
+  .sv-stat-divider {
+    width: 1px;
+    height: auto;
+  }
+}

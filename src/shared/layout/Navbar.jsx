@@ -106,6 +106,9 @@ export default function SiteNavbar() {
             <Nav.Link as={NavLink} to="/eventos">
               Eventos
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/sorteos">
+              Sorteos
+            </Nav.Link>
           </Nav>
 
           {/* Derecha */}

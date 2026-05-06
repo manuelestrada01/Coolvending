@@ -6,7 +6,13 @@
       "Bash(node -e \":*)",
       "Bash(claude mcp:*)",
       "Bash(claude doctor:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill:*)",
+      "Bash(node:*)",
+      "Bash(firebase deploy:*)",
+      "Bash(ls C:/Users/jetsa/Coolvending/functions/*.js C:/Users/jetsa/Coolvending/functions/*.ts)"
     ]
   }
 }

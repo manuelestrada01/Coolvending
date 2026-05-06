@@ -14,6 +14,7 @@ import {
   updateMaquina,
   deleteMaquina,
   removeImage,
+  invalidateMaquinasCache,
 } from "../../services/firebase/maquinas";
 import { validateMaquinaForm, validateImageFile } from "../../shared/utils/validators";
 import AlgodonM  from "../../app/assets/images/models/algodonM.png";
@@ -294,6 +295,7 @@ export default function MaquinasAdmin() {
         await addMaquina(data, imageFile, galeriaFiles, detalleFiles);
       }
 
+      invalidateMaquinasCache();
       closeModal();
       await loadMaquinas();
     } catch (err) {
@@ -310,6 +312,7 @@ export default function MaquinasAdmin() {
     setDeleting(m.id);
     try {
       await deleteMaquina(m.id, m.imagenPath, m.galeria ?? [], m.detalleImagenes ?? []);
+      invalidateMaquinasCache();
       await loadMaquinas();
     } catch (err) {
       console.error(err);

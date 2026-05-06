@@ -26,5 +26,11 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // ── Imágenes de sorteos: lectura pública, escritura solo admin ──
+    match /sorteos/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

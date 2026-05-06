@@ -15,10 +15,41 @@ import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage
 import { db, storage } from "./firebase";
 import { validateMaquinaForm, validateImageFile } from "../../shared/utils/validators";
 
-export async function getMaquinas() {
+let _maquinasCache = null;
+let _maquinasCacheAt = 0;
+let _maquinasInflight = null;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos
+
+function _fetchMaquinas() {
+  if (_maquinasInflight) return _maquinasInflight;
   const q = query(collection(db, "maquinas"), orderBy("creadoEn", "desc"));
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  _maquinasInflight = getDocs(q).then((snap) => {
+    _maquinasCache = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    _maquinasCacheAt = Date.now();
+    _maquinasInflight = null;
+    return _maquinasCache;
+  }).catch((err) => {
+    _maquinasInflight = null;
+    throw err;
+  });
+  return _maquinasInflight;
+}
+
+// Warm-up: inicia el fetch al importar el módulo, sin esperar al montaje del componente
+_fetchMaquinas();
+
+export async function getMaquinas({ forceRefresh = false } = {}) {
+  const now = Date.now();
+  if (!forceRefresh && _maquinasCache && now - _maquinasCacheAt < CACHE_TTL) {
+    return _maquinasCache;
+  }
+  return _fetchMaquinas();
+}
+
+export function invalidateMaquinasCache() {
+  _maquinasCache = null;
+  _maquinasCacheAt = 0;
+  _maquinasInflight = null;
 }
 
 export async function getMaquinaById(id) {

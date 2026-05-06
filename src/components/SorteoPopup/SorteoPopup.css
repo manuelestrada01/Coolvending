@@ -1,0 +1,497 @@
+/* ── SorteoPopup ──────────────────────────────────────────────── */
+
+.sp-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 15, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.sp-modal {
+  position: relative;
+  background: var(--cv-card-bg, #fff);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(214, 51, 132, 0.18),
+    0 32px 80px rgba(0, 0, 0, 0.45),
+    0 0 60px rgba(214, 51, 132, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Hero image ── */
+.sp-hero {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sp-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.sp-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 5, 15, 0.15) 0%,
+    rgba(10, 5, 15, 0.75) 100%
+  );
+}
+
+.sp-hero-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.sp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #d63384, #f5a524);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.sp-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  animation: spPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes spPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.sp-title {
+  margin: 0;
+  font-weight: 900;
+  line-height: 1.15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.sp-title-top {
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #d63384, #f5a524, #e040fb, #d63384);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: phGradientShift 4s ease infinite;
+  filter: drop-shadow(0 2px 16px rgba(214, 51, 132, 0.55));
+}
+
+.sp-title-brand {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* ── Close button ── */
+.sp-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.sp-close:hover {
+  background: rgba(255,255,255,0.32);
+  transform: scale(1.1);
+}
+
+/* ── Body ── */
+.sp-body {
+  padding: 0 24px 20px;
+  margin-top: -24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sp-premios-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary, #d63384);
+  margin-bottom: 14px;
+}
+
+/* ── Podio ── */
+.sp-podium {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 8px;
+  align-items: end;
+  margin-bottom: 10px;
+  padding-top: 36px;
+}
+
+/* Wrapper trofeo + card */
+.sp-podium-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sp-podium-wrapper--second,
+.sp-podium-wrapper--third {
+  padding-top: 10px; /* 2° y 3° más bajos que 1° */
+}
+
+/* Trofeo flotante SOBRE la card */
+.sp-podium-trophy {
+  position: relative;
+  z-index: 2;
+  margin-bottom: -14px; /* overlaps card */
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+}
+
+.sp-trophy {
+  display: block;
+  object-fit: contain;
+}
+
+.sp-trophy--gold   { width: 56px; height: 56px; }
+.sp-trophy--silver { width: 40px; height: 40px; }
+.sp-trophy--bronze { width: 40px; height: 40px; }
+
+/* Cards base */
+.sp-podium-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 18px;
+  padding: 20px 10px 14px;
+  position: relative;
+  border: 1.5px solid rgba(0,0,0,0.07);
+  background: var(--cv-card-bg, #fff);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  width: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sp-podium-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* 1° — dorado */
+.sp-podium-card--first {
+  border-color: rgba(200,150,12,0.45);
+  background: linear-gradient(160deg, #fffbf0, #fff8e6);
+  box-shadow: 0 6px 24px rgba(200,150,12,0.15);
+}
+
+/* 2° — plata */
+.sp-podium-card--second {
+  border-color: rgba(180,180,180,0.4);
+  background: linear-gradient(160deg, #f9f9f9, #f2f2f2);
+}
+
+/* 3° — bronce */
+.sp-podium-card--third {
+  border-color: rgba(180,120,50,0.3);
+  background: linear-gradient(160deg, #fdf5ec, #faebd7);
+}
+
+/* Número de posición */
+.sp-podium-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.sp-podium-num--gold   { background: linear-gradient(135deg, #D4AF37, #FFD700); }
+.sp-podium-num--silver { background: linear-gradient(135deg, #9E9E9E, #C8C8C8); }
+.sp-podium-num--bronze { background: linear-gradient(135deg, #8B5E3C, #CD7F32); }
+
+/* Label "Premio principal" */
+.sp-podium-principal-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #C8960C;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+/* Imagen */
+.sp-podium-img-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sp-podium-card--first .sp-podium-img-wrap {
+  border-radius: 14px;
+}
+
+.sp-podium-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sp-podium-img-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.sp-podium-img-placeholder--gold   { background: linear-gradient(135deg, #fff8dc, #ffeaa0); }
+.sp-podium-img-placeholder--silver { background: linear-gradient(135deg, #f0f0f0, #dcdcdc); }
+.sp-podium-img-placeholder--bronze { background: linear-gradient(135deg, #fdf0e0, #f0d5b0); }
+
+/* Texto */
+.sp-podium-desc {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cv-text-primary, #1a1a1a);
+  line-height: 1.3;
+}
+
+.sp-podium-card--first .sp-podium-desc {
+  font-size: 0.88rem;
+}
+
+.sp-podium-detalle {
+  font-size: 0.68rem;
+  color: var(--cv-text-secondary, #888);
+  line-height: 1.3;
+  margin-top: 3px;
+}
+
+/* 4°+ resto */
+.sp-rest {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--cv-border, rgba(0,0,0,0.07));
+}
+
+.sp-rest-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.sp-rest-num {
+  font-weight: 700;
+  color: var(--color-primary, #d63384);
+  min-width: 28px;
+}
+
+.sp-rest-desc {
+  color: var(--cv-text-primary, #1a1a1a);
+  font-weight: 500;
+}
+
+/* ── Footer ── */
+.sp-footer {
+  padding: 16px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  border-top: 1px solid var(--cv-border, rgba(0,0,0,0.08));
+  flex-shrink: 0;
+}
+
+.sp-cta {
+  display: block;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #d63384, #f5a524);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.sp-cta:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.sp-skip {
+  background: none;
+  border: none;
+  color: var(--cv-text-secondary, #888);
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  padding: 2px;
+  transition: color 0.2s ease;
+}
+
+.sp-skip:hover {
+  color: var(--cv-text-primary, #1a1a1a);
+}
+
+/* ── Dark mode ── */
+[data-theme="dark"] .sp-modal {
+  background: #1e1024;
+  box-shadow:
+    0 0 0 1px rgba(214, 51, 132, 0.22),
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    0 0 80px rgba(214, 51, 132, 0.1);
+}
+
+[data-theme="dark"] .sp-podium-card {
+  background: #261830;
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .sp-podium-card--first {
+  background: linear-gradient(160deg, #2e2010, #261a08);
+  border-color: rgba(200,150,12,0.4);
+}
+
+[data-theme="dark"] .sp-podium-card--second {
+  background: linear-gradient(160deg, #1e1e1e, #1a1a1a);
+  border-color: rgba(180,180,180,0.2);
+}
+
+[data-theme="dark"] .sp-podium-card--third {
+  background: linear-gradient(160deg, #271a0e, #221508);
+  border-color: rgba(180,120,50,0.3);
+}
+
+[data-theme="dark"] .sp-podium-img-placeholder--gold   { background: linear-gradient(135deg, #3a3010, #2e2808); }
+[data-theme="dark"] .sp-podium-img-placeholder--silver { background: linear-gradient(135deg, #282828, #222); }
+[data-theme="dark"] .sp-podium-img-placeholder--bronze { background: linear-gradient(135deg, #2e1e0e, #241508); }
+
+[data-theme="dark"] .sp-podium-desc {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .sp-rest {
+  border-color: rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .sp-rest-desc {
+  color: #ddd;
+}
+
+[data-theme="dark"] .sp-footer {
+  border-color: rgba(255,255,255,0.08);
+}
+
+/* ── Mobile ── */
+@media (max-width: 575px) {
+  .sp-hero {
+    height: 170px;
+  }
+
+  .sp-body {
+    padding: 14px 12px;
+  }
+
+  .sp-podium {
+    gap: 6px;
+  }
+
+  .sp-podium-card {
+    padding: 8px 6px 10px;
+    border-radius: 14px;
+  }
+
+  .sp-trophy--gold  { width: 34px; height: 34px; }
+  .sp-trophy--silver { width: 26px; height: 26px; }
+  .sp-trophy--bronze { width: 26px; height: 26px; }
+
+  .sp-podium-desc { font-size: 0.7rem; }
+  .sp-podium-card--first .sp-podium-desc { font-size: 0.78rem; }
+  .sp-podium-detalle { display: none; }
+
+  .sp-footer {
+    padding: 12px 14px 16px;
+  }
+
+  .sp-modal {
+    border-radius: 20px;
+  }
+}

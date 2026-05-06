@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: "/admin/eventos", label: "Eventos", icon: "🎪" },
   { to: "/admin/insumos", label: "Insumos", icon: "📦" },
   { to: "/admin/usuarios", label: "Usuarios", icon: "👥" },
+  { to: "/admin/sorteos", label: "Sorteos", icon: "🎲" },
 ];
 
 export default function AdminLayout() {

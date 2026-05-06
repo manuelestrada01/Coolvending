@@ -66,5 +66,18 @@ service cloud.firestore {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
+
+    // ── Sorteo config: lectura pública, escritura solo admin ──
+    match /sorteo_config/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ── Sorteo participantes: lectura pública (aprobados visibles), crear autenticado, admin gestiona ──
+    match /sorteo_participantes/{docId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if isAdmin();
+    }
   }
 }

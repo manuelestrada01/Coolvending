@@ -279,6 +279,12 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footer-powered-name:hover {
+  opacity: 0.8;
 }
 
 [data-theme="dark"] .footer {
